@@ -22,6 +22,7 @@
     "@bpmn-io/theme": "^0.3.0",
     "@supabase/supabase-js": "^2.49.1",
     "bpmn-js": "^18.30.0",
+    "bpmn-js-color-picker": "^0.7.2",
     "bpmn-js-properties-panel": "^5.60.0",
     "diagram-js": "^15.27.0",
     "downloadjs": "^1.4.7",

@@ -12,6 +12,11 @@ import {
   BpmnPropertiesPanelModule,
   BpmnPropertiesProviderModule
 } from 'bpmn-js-properties-panel';
+import 'bpmn-js-color-picker/colors/color-picker.css';
+import KatalisColorPickerModule from './color-picker';
+import KatalisPropertiesExtensionModule from './properties-panel';
+import customTranslate from './i18n/customTranslate';
+import katalisModdle from './moddle/katalisModdle.json';
 import fileDrop from 'file-drops';
 import fileOpen from 'file-open';
 import download from 'downloadjs';
@@ -46,9 +51,17 @@ const modeler = new BpmnModeler({
   additionalModules: [
     BpmnPropertiesPanelModule,
     BpmnPropertiesProviderModule,
+    KatalisPropertiesExtensionModule,
+    KatalisColorPickerModule,
     TokenSimulationModule,
-    AddExporter
+    AddExporter,
+    {
+      translate: [ 'value', customTranslate ]
+    }
   ],
+  moddleExtensions: {
+    katalis: katalisModdle
+  },
   propertiesPanel: {
     parent: '#properties-panel'
   },
@@ -478,5 +491,251 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       if (btnOpenFile) btnOpenFile.click();
     }
+    if (e.code === 'Escape') {
+      if (modalAttachmentPreview && modalAttachmentPreview.classList.contains('open')) {
+        modalPreviewIframe.src = 'about:blank';
+        modalAttachmentPreview.classList.remove('open');
+      }
+      if (modalCustomColor && modalCustomColor.classList.contains('open')) {
+        closeCustomColorModal();
+      }
+    }
   });
+
+  // 10. Modal Pratinjau Dokumen Lampiran (In-App Preview Iframe)
+  const modalAttachmentPreview = document.getElementById('modal-attachment-preview');
+  const btnClosePreview = document.getElementById('btn-close-preview');
+  const btnPreviewExternal = document.getElementById('btn-preview-external');
+  const modalPreviewIframe = document.getElementById('modal-preview-iframe');
+  const modalPreviewLoading = document.getElementById('modal-preview-loading');
+  const previewDocTitle = document.getElementById('modal-preview-title');
+  const previewDocBadge = document.getElementById('modal-preview-url-badge');
+
+  function normalizePreviewUrl(rawUrl) {
+    if (!rawUrl) return '';
+    let urlStr = rawUrl.trim();
+
+    // Normalisasi preview dokumen Google Docs / Sheets / Slides / Drive
+    if (urlStr.includes('docs.google.com/document/d/')) {
+      urlStr = urlStr.replace(/\/edit(\?.*)?$/, '/preview');
+      if (!urlStr.includes('/preview')) urlStr = urlStr.replace(/\/?$/, '/preview');
+    } else if (urlStr.includes('docs.google.com/spreadsheets/d/')) {
+      urlStr = urlStr.replace(/\/edit(\?.*)?$/, '/preview');
+      if (!urlStr.includes('/preview')) urlStr = urlStr.replace(/\/?$/, '/preview');
+    } else if (urlStr.includes('docs.google.com/presentation/d/')) {
+      urlStr = urlStr.replace(/\/edit(\?.*)?$/, '/preview');
+      if (!urlStr.includes('/preview')) urlStr = urlStr.replace(/\/?$/, '/preview');
+    } else if (urlStr.includes('drive.google.com/file/d/')) {
+      urlStr = urlStr.replace(/\/view(\?.*)?$/, '/preview');
+      if (!urlStr.includes('/preview')) urlStr = urlStr.replace(/\/?$/, '/preview');
+    }
+
+    return urlStr;
+  }
+
+  window.openKatalisAttachmentPreview = function(rawUrl, docName) {
+    if (!modalAttachmentPreview || !modalPreviewIframe) return;
+
+    const normalizedUrl = normalizePreviewUrl(rawUrl);
+
+    if (previewDocTitle) {
+      previewDocTitle.textContent = docName || 'Pratinjau Dokumen Lampiran';
+    }
+
+    if (previewDocBadge) {
+      let hostname = '';
+      try {
+        hostname = new URL(rawUrl).hostname;
+      } catch (e) {
+        hostname = 'Lampiran Eksternal';
+      }
+      previewDocBadge.textContent = hostname;
+    }
+
+    if (btnPreviewExternal) {
+      btnPreviewExternal.href = rawUrl;
+    }
+
+    if (modalPreviewLoading) {
+      modalPreviewLoading.style.display = 'flex';
+    }
+
+    modalPreviewIframe.src = normalizedUrl;
+
+    modalPreviewIframe.onload = () => {
+      if (modalPreviewLoading) {
+        modalPreviewLoading.style.display = 'none';
+      }
+    };
+
+    modalAttachmentPreview.classList.add('open');
+  };
+
+  if (btnClosePreview && modalAttachmentPreview && modalPreviewIframe) {
+    btnClosePreview.addEventListener('click', () => {
+      modalPreviewIframe.src = 'about:blank';
+      modalAttachmentPreview.classList.remove('open');
+    });
+  }
+
+  if (modalAttachmentPreview && modalPreviewIframe) {
+    modalAttachmentPreview.addEventListener('click', (e) => {
+      if (e.target === modalAttachmentPreview) {
+        modalPreviewIframe.src = 'about:blank';
+        modalAttachmentPreview.classList.remove('open');
+      }
+    });
+  }
+
+  // 11. Modal Pewarnaan Notasi Bebas (Custom Spectrum Color Picker)
+  const modalCustomColor = document.getElementById('modal-custom-color');
+  const btnCloseColorModal = document.getElementById('btn-close-custom-color');
+  const btnCancelCustomColor = document.getElementById('btn-cancel-custom-color');
+  const btnApplyCustomColor = document.getElementById('btn-apply-custom-color');
+  const btnResetColorDefault = document.getElementById('btn-reset-color-default');
+  const customColorPreviewBox = document.getElementById('custom-color-preview-box');
+  const inputCustomFill = document.getElementById('input-custom-fill');
+  const inputCustomFillHex = document.getElementById('input-custom-fill-hex');
+  const inputCustomStroke = document.getElementById('input-custom-stroke');
+  const inputCustomStrokeHex = document.getElementById('input-custom-stroke-hex');
+  const btnAutoContrastStroke = document.getElementById('btn-auto-contrast-stroke');
+
+  let activeColorElements = null;
+
+  function getDarkerStrokeFromHex(hex) {
+    if (!hex || hex[0] !== '#' || hex.length !== 7) return '#0f172a';
+    let r = parseInt(hex.slice(1, 3), 16);
+    let g = parseInt(hex.slice(3, 5), 16);
+    let b = parseInt(hex.slice(5, 7), 16);
+
+    r = Math.max(0, Math.floor(r * 0.4));
+    g = Math.max(0, Math.floor(g * 0.4));
+    b = Math.max(0, Math.floor(b * 0.4));
+
+    const toHex = (n) => n.toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
+  function updateColorPreview() {
+    const fill = inputCustomFillHex ? inputCustomFillHex.value.trim() : '#ffffff';
+    const stroke = inputCustomStrokeHex ? inputCustomStrokeHex.value.trim() : '#0f172a';
+
+    if (customColorPreviewBox) {
+      customColorPreviewBox.style.backgroundColor = fill;
+      customColorPreviewBox.style.borderColor = stroke;
+    }
+  }
+
+  function setCustomColorValues(fill, stroke) {
+    if (inputCustomFill) inputCustomFill.value = fill || '#ffffff';
+    if (inputCustomFillHex) inputCustomFillHex.value = fill || '#ffffff';
+    if (inputCustomStroke) inputCustomStroke.value = stroke || '#0f172a';
+    if (inputCustomStrokeHex) inputCustomStrokeHex.value = stroke || '#0f172a';
+    updateColorPreview();
+  }
+
+  window.openKatalisCustomColorModal = function(elements) {
+    if (!modalCustomColor) return;
+    activeColorElements = elements;
+
+    const target = Array.isArray(elements) ? elements[0] : elements;
+    const di = target && target.di;
+
+    const currentFill = (di && di.get('bioc:fill')) || '#ffffff';
+    const currentStroke = (di && di.get('bioc:stroke')) || '#0f172a';
+
+    setCustomColorValues(currentFill, currentStroke);
+    modalCustomColor.classList.add('open');
+  };
+
+  function closeCustomColorModal() {
+    if (modalCustomColor) {
+      modalCustomColor.classList.remove('open');
+    }
+    activeColorElements = null;
+  }
+
+  if (btnCloseColorModal) btnCloseColorModal.addEventListener('click', closeCustomColorModal);
+  if (btnCancelCustomColor) btnCancelCustomColor.addEventListener('click', closeCustomColorModal);
+
+  if (modalCustomColor) {
+    modalCustomColor.addEventListener('click', (e) => {
+      if (e.target === modalCustomColor) {
+        closeCustomColorModal();
+      }
+    });
+  }
+
+  if (inputCustomFill && inputCustomFillHex) {
+    inputCustomFill.addEventListener('input', (e) => {
+      inputCustomFillHex.value = e.target.value;
+      updateColorPreview();
+    });
+    inputCustomFillHex.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+        inputCustomFill.value = val;
+      }
+      updateColorPreview();
+    });
+  }
+
+  if (inputCustomStroke && inputCustomStrokeHex) {
+    inputCustomStroke.addEventListener('input', (e) => {
+      inputCustomStrokeHex.value = e.target.value;
+      updateColorPreview();
+    });
+    inputCustomStrokeHex.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      if (/^#[0-9A-Fa-f]{6}$/.test(val)) {
+        inputCustomStroke.value = val;
+      }
+      updateColorPreview();
+    });
+  }
+
+  if (btnAutoContrastStroke) {
+    btnAutoContrastStroke.addEventListener('click', () => {
+      const fillHex = inputCustomFillHex ? inputCustomFillHex.value.trim() : '#ffffff';
+      const autoStroke = getDarkerStrokeFromHex(fillHex);
+      if (inputCustomStroke) inputCustomStroke.value = autoStroke;
+      if (inputCustomStrokeHex) inputCustomStrokeHex.value = autoStroke;
+      updateColorPreview();
+    });
+  }
+
+  // Quick Swatches
+  document.querySelectorAll('.vng-color-swatch').forEach(swatch => {
+    swatch.addEventListener('click', () => {
+      const fill = swatch.getAttribute('data-fill');
+      const stroke = swatch.getAttribute('data-stroke');
+      if (fill && stroke) {
+        setCustomColorValues(fill, stroke);
+      }
+    });
+  });
+
+  // Reset to default
+  if (btnResetColorDefault) {
+    btnResetColorDefault.addEventListener('click', () => {
+      if (activeColorElements && activeColorElements.length) {
+        const modeling = modeler.get('modeling');
+        modeling.setColor(activeColorElements, { fill: undefined, stroke: undefined });
+      }
+      closeCustomColorModal();
+    });
+  }
+
+  // Apply custom color
+  if (btnApplyCustomColor) {
+    btnApplyCustomColor.addEventListener('click', () => {
+      if (activeColorElements && activeColorElements.length) {
+        const fill = inputCustomFillHex ? inputCustomFillHex.value.trim() : undefined;
+        const stroke = inputCustomStrokeHex ? inputCustomStrokeHex.value.trim() : undefined;
+        const modeling = modeler.get('modeling');
+        modeling.setColor(activeColorElements, { fill, stroke });
+      }
+      closeCustomColorModal();
+    });
+  }
 });

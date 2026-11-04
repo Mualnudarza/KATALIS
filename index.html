@@ -542,6 +542,142 @@
       </div>
     </div>
 
+    <!-- Modal Pratinjau Dokumen Lampiran In-App (Pop-up Terintegrasi) -->
+    <div class="vng-modal-backdrop" id="modal-attachment-preview">
+      <div class="vng-modal vng-modal-preview">
+        <div class="vng-modal-header">
+          <div class="vng-modal-title" id="modal-preview-title-container">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span id="modal-preview-title" style="font-size: 15px; font-weight: 600; color: var(--vng-text-main);">Pratinjau Dokumen Lampiran</span>
+              <span id="modal-preview-url-badge" class="vng-preview-url" title="">https://...</span>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <a href="#" target="_blank" rel="noopener noreferrer" class="vng-btn vng-btn-ghost vng-btn-sm" id="btn-preview-external" title="Buka tautan ini di tab peramban baru jika tampilan tertanam dibatasi">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              <span>Buka di Tab Baru</span>
+            </a>
+            <button class="vng-btn vng-btn-ghost vng-btn-sm" id="btn-close-preview" title="Tutup pratinjau">Tutup</button>
+          </div>
+        </div>
+
+        <div class="vng-modal-body vng-modal-preview-body">
+          <div class="vng-preview-iframe-wrapper">
+            <div class="vng-preview-loading" id="modal-preview-loading">
+              <div class="vng-spinner"></div>
+              <span>Memuat dokumen lampiran...</span>
+            </div>
+            <iframe id="modal-preview-iframe" src="about:blank" title="Pratinjau Lampiran Dokumen" sandbox="allow-scripts allow-same-origin allow-forms allow-popups"></iframe>
+          </div>
+
+          <div class="vng-preview-notice" id="modal-preview-notice">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <span>Pratinjau tertanam mendukung Google Docs/Sheets, berkas PDF langsung, dan web terbuka. Jika dokumen dibatasi oleh kebijakan keamanan server asal, gunakan tombol <strong>Buka di Tab Baru</strong>.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Penentu Warna Notasi BPMN (Bebas Spectrum) -->
+    <div class="vng-modal-backdrop" id="modal-custom-color">
+      <div class="vng-modal vng-modal-color">
+        <div class="vng-modal-header">
+          <div class="vng-modal-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2a10 10 0 0 1 10 10c0 5.523-4.477 10-10 10a10 10 0 0 1-10-10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+            Warna Kustom Notasi BPMN
+          </div>
+          <button class="vng-btn vng-btn-ghost vng-btn-sm" id="btn-close-custom-color">Tutup</button>
+        </div>
+
+        <div class="vng-modal-body">
+          <p style="margin: 0 0 16px 0; font-size: 13px; color: var(--vng-text-muted);">
+            Tentukan kombinasi warna latar (fill) dan garis tepi (stroke) secara bebas untuk notasi BPMN yang dipilih.
+          </p>
+
+          <!-- Kotak Pratinjau Langsung -->
+          <div class="vng-color-preview-container">
+            <div class="vng-color-preview-shape" id="custom-color-preview-box">
+              <span id="custom-color-preview-text">Contoh Notasi BPMN</span>
+            </div>
+          </div>
+
+          <!-- Input Warna Latar & Garis -->
+          <div class="vng-color-pickers-grid">
+            <div class="vng-form-group">
+              <label class="vng-label" for="input-custom-fill">Warna Latar (Fill)</label>
+              <div class="vng-color-input-row">
+                <input type="color" id="input-custom-fill" value="#DBEAFE" />
+                <input type="text" class="vng-input" id="input-custom-fill-hex" value="#DBEAFE" maxlength="7" />
+              </div>
+            </div>
+
+            <div class="vng-form-group">
+              <label class="vng-label" for="input-custom-stroke">Warna Garis (Stroke)</label>
+              <div class="vng-color-input-row">
+                <input type="color" id="input-custom-stroke" value="#1D4ED8" />
+                <input type="text" class="vng-input" id="input-custom-stroke-hex" value="#1D4ED8" maxlength="7" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Bantuan Kontras & Preset Cepat -->
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <button type="button" class="vng-btn vng-btn-ghost vng-btn-sm" id="btn-auto-contrast-stroke" title="Otomatis buat warna garis lebih gelap dan kontras berdasarkan warna latar">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+              Garis Otomatis (Kontras)
+            </button>
+
+            <button type="button" class="vng-btn vng-btn-ghost vng-btn-sm" id="btn-reset-color-default" title="Kembalikan ke warna standar hitam putih bawaan BPMN">
+              Reset ke Default
+            </button>
+          </div>
+
+          <!-- Palet Cepat Favorit -->
+          <div style="margin-top: 16px;">
+            <div style="font-size: 11px; font-weight: 600; color: var(--vng-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+              Pilihan Cepat Vengeance UI
+            </div>
+            <div class="vng-quick-colors-row">
+              <button type="button" class="vng-color-swatch" data-fill="#DBEAFE" data-stroke="#1D4ED8" title="Biru Proses" style="background: #DBEAFE; border-color: #1D4ED8;"></button>
+              <button type="button" class="vng-color-swatch" data-fill="#DCFCE7" data-stroke="#15803D" title="Hijau Sukses" style="background: #DCFCE7; border-color: #15803D;"></button>
+              <button type="button" class="vng-color-swatch" data-fill="#FEF9C3" data-stroke="#A16207" title="Kuning Evaluasi" style="background: #FEF9C3; border-color: #A16207;"></button>
+              <button type="button" class="vng-color-swatch" data-fill="#FFEDD5" data-stroke="#C2410C" title="Oranye Perhatian" style="background: #FFEDD5; border-color: #C2410C;"></button>
+              <button type="button" class="vng-color-swatch" data-fill="#FEE2E2" data-stroke="#B91C1C" title="Merah Risiko" style="background: #FEE2E2; border-color: #B91C1C;"></button>
+              <button type="button" class="vng-color-swatch" data-fill="#F3E8FF" data-stroke="#7E22CE" title="Ungu Khusus" style="background: #F3E8FF; border-color: #7E22CE;"></button>
+              <button type="button" class="vng-color-swatch" data-fill="#CCFBF1" data-stroke="#0F766E" title="Teal Integrasi" style="background: #CCFBF1; border-color: #0F766E;"></button>
+              <button type="button" class="vng-color-swatch" data-fill="#F1F5F9" data-stroke="#475569" title="Abu-abu Netral" style="background: #F1F5F9; border-color: #475569;"></button>
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--vng-border);">
+            <button class="vng-btn vng-btn-ghost" id="btn-cancel-custom-color">Batal</button>
+            <button class="vng-btn vng-btn-primary" id="btn-apply-custom-color">Terapkan Warna</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- KATALIS Application Bundle -->

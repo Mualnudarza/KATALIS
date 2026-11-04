@@ -1,0 +1,28 @@
+{
+  "name": "Katalis",
+  "uri": "http://katalis.mualnudarza.io/schema/bpmn",
+  "prefix": "katalis",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "types": [
+    {
+      "name": "AttachmentElement",
+      "extends": [
+        "bpmn:BaseElement"
+      ],
+      "properties": [
+        {
+          "name": "attachmentUrl",
+          "isAttr": true,
+          "type": "String"
+        },
+        {
+          "name": "attachmentName",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

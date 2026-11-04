@@ -1003,6 +1003,264 @@ html, body {
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }
 
+/* ==========================================================================
+   6. Attachment In-App Preview Modal & Custom Color Modal (Vengeance UI)
+   ========================================================================== */
+
+/* In-App Preview Modal */
+.vng-modal-preview {
+  max-width: 960px;
+  width: 95vw;
+  height: 88vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.vng-preview-url {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--vng-primary);
+  max-width: 500px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.vng-modal-preview-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  gap: 12px;
+  overflow: hidden;
+  max-height: none;
+  background: #f8fafc;
+}
+
+.vng-preview-iframe-wrapper {
+  flex: 1;
+  position: relative;
+  background: #ffffff;
+  border: 1px solid var(--vng-border);
+  border-radius: var(--vng-radius-md);
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+.vng-preview-iframe-wrapper iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  background: #ffffff;
+}
+
+.vng-preview-loading {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  z-index: 5;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--vng-text-muted);
+  transition: opacity 0.2s ease;
+}
+
+.vng-preview-loading.hidden {
+  opacity: 0;
+  pointer-events: none;
+  display: none;
+}
+
+.vng-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(37, 99, 235, 0.15);
+  border-top-color: var(--vng-primary);
+  border-radius: 50%;
+  animation: vng-spin 0.8s linear infinite;
+}
+
+@keyframes vng-spin {
+  to { transform: rotate(360deg); }
+}
+
+.vng-preview-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: var(--vng-radius-md);
+  font-size: 11px;
+  line-height: 1.5;
+  color: #1e40af;
+}
+
+.vng-preview-notice svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Custom Color Spectrum Modal */
+.vng-modal-color {
+  max-width: 480px;
+  width: 95vw;
+}
+
+.vng-color-preview-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: var(--vng-surface-alt);
+  border: 1px solid var(--vng-border);
+  border-radius: var(--vng-radius-lg);
+  margin-bottom: 20px;
+}
+
+.vng-color-preview-shape {
+  width: 180px;
+  height: 80px;
+  border-radius: 10px;
+  border: 2px solid #1D4ED8;
+  background: #DBEAFE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0F172A;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  transition: all 0.15s ease;
+}
+
+.vng-color-pickers-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.vng-color-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vng-color-input-row input[type="color"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--vng-border);
+  border-radius: var(--vng-radius-md);
+  cursor: pointer;
+  background: transparent;
+  padding: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.vng-color-input-row input[type="color"]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.vng-color-input-row input[type="color"]::-webkit-color-swatch {
+  border: none;
+  border-radius: calc(var(--vng-radius-md) - 1px);
+}
+
+.vng-color-input-row input[type="text"] {
+  font-family: var(--vng-font-mono, monospace);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.vng-quick-colors-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.vng-color-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--vng-radius-sm);
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--vng-transition);
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.1);
+}
+
+.vng-color-swatch:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.15);
+}
+
+/* ==========================================================================
+   7. Styling Kustom untuk Context Pad & Popup Menu BPMN in Color
+   ========================================================================== */
+.djs-context-pad .entry.bpmn-icon-color {
+  background: transparent;
+}
+
+.djs-context-pad .entry.bpmn-icon-color:hover {
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--vng-primary);
+}
+
+.djs-popup.color-picker {
+  background: #ffffff !important;
+  border: 1px solid var(--vng-border) !important;
+  border-radius: var(--vng-radius-lg) !important;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.15) !important;
+  padding: 6px !important;
+}
+
+.djs-popup.color-picker .djs-popup-group {
+  display: grid !important;
+  grid-template-columns: repeat(4, 34px) !important;
+  gap: 6px !important;
+  padding: 4px !important;
+}
+
+.djs-popup.color-picker .entry {
+  width: 34px !important;
+  height: 34px !important;
+  margin: 0 !important;
+  padding: 3px !important;
+  border-radius: var(--vng-radius-md) !important;
+  border: 1px solid transparent !important;
+  transition: var(--vng-transition) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+}
+
+.djs-popup.color-picker .entry:hover {
+  background: var(--vng-surface-alt) !important;
+  border-color: #93c5fd !important;
+  transform: scale(1.08) !important;
+}
+
+.djs-popup.color-picker .entry svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .vng-sidebar-drawer {
