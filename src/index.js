@@ -82,6 +82,85 @@ export function updateDynamicGrid(viewbox) {
   container.style.backgroundPosition = `${posX}px ${posY}px`;
 }
 
+// Helper: Konversi SVG string ke berkas gambar raster PNG resolusi tinggi (2x Retina)
+export function exportDiagramAsPng(svgString, fileName) {
+  return new Promise((resolve, reject) => {
+    try {
+      const parser = new DOMParser();
+      const svgDoc = parser.parseFromString(svgString, 'image/svg+xml');
+      const svgElement = svgDoc.documentElement;
+
+      // Ambil dimensi dari viewBox atau atribut width & height
+      let width = parseFloat(svgElement.getAttribute('width'));
+      let height = parseFloat(svgElement.getAttribute('height'));
+      const viewBox = svgElement.getAttribute('viewBox');
+
+      if (viewBox) {
+        const parts = viewBox.trim().split(/\s+/).map(Number);
+        if (parts.length === 4 && parts[2] > 0 && parts[3] > 0) {
+          width = parts[2];
+          height = parts[3];
+        }
+      }
+
+      if (!width || !height || isNaN(width) || isNaN(height)) {
+        width = 1200;
+        height = 800;
+      }
+
+      // Pastikan atribut width dan height terpasang pada SVG root
+      svgElement.setAttribute('width', width);
+      svgElement.setAttribute('height', height);
+
+      const serializedSvg = new XMLSerializer().serializeToString(svgDoc);
+      const svgBlob = new Blob([serializedSvg], { type: 'image/svg+xml;charset=utf-8' });
+      const blobUrl = URL.createObjectURL(svgBlob);
+
+      const img = new Image();
+      img.onload = () => {
+        // Skala 2x untuk menghasilkan resolusi tajam bebas buram
+        const scale = 2;
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(width * scale);
+        canvas.height = Math.round(height * scale);
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          URL.revokeObjectURL(blobUrl);
+          reject(new Error('Gagal menginisialisasi 2D canvas context'));
+          return;
+        }
+
+        // Beri latar belakang putih bersih agar diagram terbaca di dokumen/slide
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Render gambar SVG ke canvas
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        URL.revokeObjectURL(blobUrl);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            download(blob, fileName, 'image/png');
+            resolve();
+          } else {
+            reject(new Error('Gagal menghasilkan Blob PNG dari canvas'));
+          }
+        }, 'image/png');
+      };
+
+      img.onerror = (err) => {
+        URL.revokeObjectURL(blobUrl);
+        reject(new Error('Gagal memuat elemen gambar SVG: ' + err));
+      };
+
+      img.src = blobUrl;
+    } catch (err) {
+      reject(err);
+    }
+  });
+}
+
 // Helper: Buka diagram XML
 export function openDiagram(xmlString) {
   return modeler.importXML(xmlString)
@@ -271,6 +350,19 @@ document.addEventListener('DOMContentLoaded', () => {
       modeler.saveSVG().then(({ svg }) => {
         const svgFileName = currentFileName.replace(/\.bpmn$/, '') + '.svg';
         download(svg, svgFileName, 'image/svg+xml');
+      });
+    });
+  }
+
+  const btnExportPng = document.getElementById('btn-export-png');
+  if (btnExportPng) {
+    btnExportPng.addEventListener('click', () => {
+      modeler.saveSVG().then(({ svg }) => {
+        const pngFileName = currentFileName.replace(/\.bpmn$/, '') + '.png';
+        exportDiagramAsPng(svg, pngFileName).catch(err => {
+          console.error('Gagal ekspor PNG:', err);
+          alert('Gagal mengekspor diagram ke format PNG: ' + err.message);
+        });
       });
     });
   }
