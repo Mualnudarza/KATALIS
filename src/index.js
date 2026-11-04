@@ -58,6 +58,30 @@ const modeler = new BpmnModeler({
   }
 });
 
+// Dynamic Canvas Grid Synchronizer (Membuat background grid bergerak dan berskala dinamis mengikuti viewbox)
+export function updateDynamicGrid(viewbox) {
+  const container = document.querySelector('.canvas-container');
+  if (!container) return;
+
+  if (!viewbox) {
+    try {
+      viewbox = modeler.get('canvas').viewbox();
+    } catch (e) {
+      return;
+    }
+  }
+
+  if (!viewbox || typeof viewbox.scale !== 'number') return;
+
+  const baseSize = 20;
+  const size = Math.round(baseSize * viewbox.scale * 100) / 100;
+  const posX = Math.round(-viewbox.x * viewbox.scale * 100) / 100;
+  const posY = Math.round(-viewbox.y * viewbox.scale * 100) / 100;
+
+  container.style.backgroundSize = `${size}px ${size}px`;
+  container.style.backgroundPosition = `${posX}px ${posY}px`;
+}
+
 // Helper: Buka diagram XML
 export function openDiagram(xmlString) {
   return modeler.importXML(xmlString)
@@ -73,6 +97,7 @@ export function openDiagram(xmlString) {
       setTimeout(() => {
         try {
           modeler.get('canvas').zoom('fit-viewport');
+          updateDynamicGrid();
         } catch (e) {}
       }, 50);
     })
@@ -84,6 +109,11 @@ export function openDiagram(xmlString) {
 
 // Inisialisasi Event Bus & Token Simulation
 const eventBus = modeler.get('eventBus');
+
+// Listener: Sinkronisasi dynamic grid saat viewbox canvas digeser (pan) atau dizoom
+eventBus.on('canvas.viewbox.changed', (event) => {
+  updateDynamicGrid(event.viewbox);
+});
 
 eventBus.on('tokenSimulation.toggleMode', (event) => {
   isSimulationActive = event.active;
@@ -108,10 +138,11 @@ export function switchView(targetView) {
     if (viewHub) viewHub.classList.remove('active');
     if (viewWorkspace) viewWorkspace.classList.add('active');
 
-    // Sesuaikan zoom canvas saat view dibuka
+    // Sesuaikan zoom canvas dan grid saat workspace dibuka
     setTimeout(() => {
       try {
         modeler.get('canvas').zoom('fit-viewport');
+        updateDynamicGrid();
       } catch (e) {}
     }, 100);
   } else {
@@ -160,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2. Navigasi Router Hub <--> Workspace
   const btnEnterBpmn = document.getElementById('btn-enter-bpmn');
-  const btnQuickLaunchBpmn = document.getElementById('btn-quick-launch-bpmn');
   const btnBackHub = document.getElementById('btn-back-hub');
   const drawerNavHub = document.getElementById('drawer-nav-hub');
   const workspaceBrandHome = document.getElementById('workspace-brand-home');
@@ -168,9 +198,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnEnterBpmn) {
     btnEnterBpmn.addEventListener('click', () => switchView('workspace'));
-  }
-  if (btnQuickLaunchBpmn) {
-    btnQuickLaunchBpmn.addEventListener('click', () => switchView('workspace'));
   }
   if (btnBackHub) {
     btnBackHub.addEventListener('click', () => switchView('hub'));

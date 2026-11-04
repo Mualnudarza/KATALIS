@@ -689,7 +689,7 @@ html, body {
    ========================================================================== */
 .vng-dock {
   position: absolute;
-  bottom: 24px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -702,7 +702,60 @@ html, body {
   border: 1px solid var(--vng-border);
   border-radius: var(--vng-radius-full);
   box-shadow: var(--vng-shadow-dock);
-  z-index: 90;
+  z-index: 70;
+}
+
+/* BPMN.io Token Simulation Animation Speed (Fast Forward Controls) */
+.bts-set-animation-speed {
+  position: absolute !important;
+  bottom: 74px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--vng-border) !important;
+  border-radius: var(--vng-radius-full) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08) !important;
+  padding: 3px 6px 3px 10px !important;
+  z-index: 75 !important;
+  font-family: var(--vng-font-sans) !important;
+}
+
+.bts-set-animation-speed.hidden {
+  display: none !important;
+}
+
+.bts-set-animation-speed .bts-animation-speed-buttons {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 2px !important;
+  margin-left: 6px !important;
+}
+
+.bts-set-animation-speed .bts-animation-speed-button {
+  border-radius: var(--vng-radius-full) !important;
+  height: 26px !important;
+  width: 26px !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 1px solid transparent !important;
+  background: transparent !important;
+  color: var(--vng-text-muted) !important;
+  transition: var(--vng-transition) !important;
+}
+
+.bts-set-animation-speed .bts-animation-speed-button:hover {
+  background: var(--vng-surface-alt) !important;
+  color: var(--vng-text-main) !important;
+}
+
+.bts-set-animation-speed .bts-animation-speed-button.active {
+  background: var(--vng-primary) !important;
+  color: #ffffff !important;
 }
 
 .vng-dock-divider {
@@ -931,11 +984,12 @@ html, body {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 
-/* Drop Hint Message */
+/* Drop Hint Message (Pojok Kanan Atas Kanvas agar tidak menimpa kontrol BPMN di kiri atas) */
 .vng-drop-message {
   position: absolute;
   top: 16px;
-  left: 16px;
+  right: 20px;
+  left: auto;
   padding: 6px 14px;
   background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(8px);
@@ -944,7 +998,7 @@ html, body {
   font-size: 11px;
   font-weight: 500;
   color: var(--vng-text-muted);
-  z-index: 10;
+  z-index: 40;
   pointer-events: none;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
 }

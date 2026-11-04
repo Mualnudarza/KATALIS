@@ -46,17 +46,7 @@
           </div>
         </div>
 
-        <div class="vng-nav-actions">
-          <div style="font-size: 11px; font-weight: 500; color: var(--vng-text-muted); padding: 4px 10px; background: var(--vng-surface-alt); border-radius: var(--vng-radius-full); border: 1px solid var(--vng-border);">
-            100% Offline Local-First
-          </div>
-          <button class="vng-btn vng-btn-primary" id="btn-quick-launch-bpmn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polygon points="5 3 19 12 5 21 5 3"/>
-            </svg>
-            Buka BPMN Simulator
-          </button>
-        </div>
+        <div class="vng-nav-actions"></div>
       </header>
 
       <!-- Hub Content Area -->
@@ -421,6 +411,28 @@
         <div class="canvas-container">
           <div class="vng-drop-message">Tarik dan letakkan berkas .bpmn ke sini untuk membuka diagram</div>
           <div id="canvas"></div>
+
+          <!-- Floating Glass Dock (Kontrol Simulasi Token Terpusat di Kanvas) -->
+          <nav class="vng-dock">
+            <span class="status-indicator" id="sim-status-indicator" title="Status Simulasi Token"></span>
+
+            <button class="vng-dock-btn" id="btn-toggle-sim" title="Aktifkan / Nonaktifkan Mode Simulasi Token">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <polygon points="5 3 19 12 5 21 5 3"/>
+              </svg>
+              <span>Mode Simulasi Token</span>
+            </button>
+
+            <div class="vng-dock-divider"></div>
+
+            <button class="vng-dock-btn" id="btn-reset-sim" title="Reset semua token simulasi ke kondisi awal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 4v6h6"/>
+                <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+              </svg>
+              <span>Reset Token</span>
+            </button>
+          </nav>
         </div>
 
         <!-- Properties Panel Drawer -->
@@ -432,28 +444,6 @@
         </aside>
 
       </main>
-
-      <!-- Floating Glass Dock (Kontrol Simulasi Token) -->
-      <nav class="vng-dock">
-        <span class="status-indicator" id="sim-status-indicator" title="Status Simulasi Token"></span>
-
-        <button class="vng-dock-btn" id="btn-toggle-sim" title="Aktifkan / Nonaktifkan Mode Simulasi Token">
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="5 3 19 12 5 21 5 3"/>
-          </svg>
-          <span>Mode Simulasi Token</span>
-        </button>
-
-        <div class="vng-dock-divider"></div>
-
-        <button class="vng-dock-btn" id="btn-reset-sim" title="Reset semua token simulasi ke kondisi awal">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M1 4v6h6"/>
-            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
-          </svg>
-          <span>Reset Token</span>
-        </button>
-      </nav>
 
     </div>
 
