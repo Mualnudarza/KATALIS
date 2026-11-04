@@ -1,7 +1,7 @@
 # KATALIS
 ### Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis
 
-Platform web terintegrasi untuk pemodelan proses bisnis BPMN 2.0, simulasi token dinamis (*bpmn-js-token-simulation*), pustaka template sistematis, dan integrasi penyimpanan cloud Supabase dengan desain antarmuka modern berbasis Vengeance UI.
+Platform portal terpadu untuk pemodelan proses bisnis BPMN 2.0, simulasi token dinamis (*bpmn-js-token-simulation*), pustaka template sistematis, dan instrumen operasional berbasis peramban web statis dengan desain antarmuka Mode Terang (*Light Mode*) Vengeance UI.
 
 ---
 
@@ -9,69 +9,50 @@ Platform web terintegrasi untuk pemodelan proses bisnis BPMN 2.0, simulasi token
 
 - **URL Aplikasi (GitHub Pages)**: [https://mualnudarza.github.io/KATALIS/](https://mualnudarza.github.io/KATALIS/)
 - **Repositori GitHub**: [https://github.com/Mualnudarza/KATALIS](https://github.com/Mualnudarza/KATALIS)
-- **Database Endpoint**: [https://xrtfqufwbgbwgtwayuqt.supabase.co](https://xrtfqufwbgbwgtwayuqt.supabase.co)
-- **Referensi Desain UI**: [Vengeance UI](https://www.vengenceui.com/)
+- **Desain Antarmuka**: Mode Terang Vengeance UI ([www.vengenceui.com](https://www.vengenceui.com/))
+- **Arsitektur Spesifikasi**: Berbasis The 4 Files Framework (`docs/PRD.md`, `docs/DESIGN-SYSTEM.md`, `docs/ARCHITECTURE.md`, `AGENTS.md`)
 
 ---
 
-## Fitur Utama
+## Konsep & Fitur Utama
 
-1. **Simulasi Token BPMN 2.0 Interaktif**:
-   - Berbasis engine resmi bpmn.io (*bpmn-js-token-simulation*).
-   - Pengujian semantik eksekusi proses langkah-demi-langkah.
-   - Evaluasi visual gateway percabangan (XOR, AND, OR), timer event, dan sinkronisasi paralel.
+1. **Portal Shell Hub**:
+   - Beranda pembuka berbentuk katalog Bento Grid untuk memilih instrumen dan alat kerja sistematis.
+   - Modul aktif: *BPMN 2.0 Modeler & Token Simulator*.
+   - Kartu rencana instrumen mendatang (*Roadmap Cards*): SLA & Cycle Time Analyzer, SOP Document Generator, Process Compliance Audit.
 
-2. **Desain Antarmuka Vengeance UI**:
-   - Tema gelap modern (*Dark Zinc Aesthetic*) dengan efek blur backdrop.
-   - *Spotlight Top Navbar* dengan identitas brand KATALIS dan akses cepat.
-   - *Floating Glass Dock* untuk kendali simulasi token yang responsif.
-   - *Bento Grid Modal* untuk pemilihan template dan manajemen sinkronisasi cloud.
+2. **Ruang Kerja Pemodelan & Simulasi Token BPMN 2.0**:
+   - Kanvas visual OMG BPMN 2.0 standar internasional (`bpmn-js`).
+   - Mesin eksekusi simulasi token dinamis langkah-demi-langkah (`bpmn-js-token-simulation`).
+   - Floating Glass Dock untuk kendali pemutaran simulasi (Play, Step, Reset, dan Status Pulsa).
+   - Sidebar Tab Navigasi untuk berpindah antar-alat dan kembali ke Beranda Portal Hub.
 
-3. **Pustaka Template Terverifikasi**:
-   - Template Simulasi Token Paralel (Uji Eksekusi).
-   - Template Alur End-to-End Closing Customer (Account Executive & Finance).
-   - Template Kanvas Bersih untuk perancangan proses baru dari awal.
+3. **Penyimpanan Lokal Murni (100% Offline)**:
+   - Beroperasi langsung di peramban tanpa kewajiban autentikasi akun atau server database.
+   - Diagram tersimpan aman di penyimpanan lokal peramban (*LocalStorage*).
+   - Ekspor dan impor file standar XML BPMN 2.0 serta ekspor gambar vektor SVG resolusi tinggi.
 
-4. **Penyimpanan Hibrida (Local-First + Supabase Cloud)**:
-   - *Local-First*: Otomatis menyimpan progres diagram di penyimpanan browser (*LocalStorage*) tanpa latensi.
-   - *Supabase Cloud*: Kemampuan sinkronisasi cloud ke PostgreSQL database untuk persistensi jangka panjang dan audit log telemetri simulasi.
-
-5. **Ekspor & Interoperabilitas Lengkap**:
-   - Impor dan ekspor file standar XML BPMN 2.0.
-   - Ekspor gambar vektor resolusi tinggi format SVG.
-   - Panel properti BPMN bawaan untuk konfigurasi atribut teknis elemen proses.
+4. **Desain Antarmuka Vengeance UI Mode Terang**:
+   - Tampilan terang cerah berorientasi ketelitian analisis (*Clean Light Zinc #F8FAFC & #FFFFFF*).
+   - Spotlight Top Navbar dengan backdrop blur halus.
+   - Floating Glass Dock melayang yang ergonomis.
+   - Kartu Bento informatif dengan tata kelola token visual terstandarisasi.
 
 ---
 
-## Struktur Direktori Repositori
+## Struktur Spesifikasi Sistem (The 4 Files Framework)
+
+Proyek ini dikelola mengikuti metodologi spesifikasi pra-koding standar MUALNURDARZA:
 
 ```text
 KATALIS/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml            # CI/CD otomatis ke GitHub Pages
-├── ARCHITECTURE/
-│   └── ARSITEKTUR-KATALIS.md     # Spesifikasi lengkap arsitektur 5 layer & roadmap
-├── assets/                       # Aset ikon dan stylesheet token simulation
-├── dist/                         # Hasil kompilasi bundel produksi Webpack
-│   ├── katalis.bundle.js         # Bundel utama JavaScript
-│   └── vendor/                   # Aset font, ikon, dan stylesheet vendor
-├── lib/                          # Modul inti bpmn-js-token-simulation
-├── node_modules/                 # Dependensi pustaka npm
-├── resources/                    # Berkas sumber daya BPMN
-├── src/                          # Kode sumber aplikasi
-│   ├── index.js                  # Titik masuk utama aplikasi KATALIS
-│   ├── supabase.js               # Klien integrasi Supabase Database
-│   └── templates/
-│       └── templates.js          # Pustaka template proses bisnis bawaan
-├── styles/
-│   └── katalis-vengence.css      # Desain tema Vengeance UI
-├── supabase/
-│   └── schema.sql                # Skema DDL tabel PostgreSQL Supabase
-├── index.html                    # Halaman web utama untuk hosting GitHub Pages
-├── package.json                  # Konfigurasi dependensi dan skrip proyek
-├── webpack.config.js             # Konfigurasi kompilasi Webpack
-└── README.md                     # Dokumentasi resmi proyek
+├── docs/
+│   ├── PRD.md                    # File 01: Visi produk, target pengguna, fitur V1, dan Out of Scope
+│   ├── DESIGN-SYSTEM.md          # File 02: Aturan visual, hex codes, skala 8px, mode terang
+│   └── ARCHITECTURE.md           # File 03: Topologi portal, subsistem alat, dan data flow
+├── AGENTS.md                     # File 04: Aturan kerja operasional AI lintas platform (Root)
+├── CLAUDE.md                     # Root Bridge: Memuat @AGENTS.md untuk Claude Code
+└── README.md                     # Panduan orientasi untuk pengembang manusia
 ```
 
 ---
@@ -106,20 +87,6 @@ KATALIS/
    ```bash
    npm run build
    ```
-
----
-
-## Konfigurasi Supabase Cloud Database
-
-Aplikasi KATALIS telah terkonfigurasi dengan endpoint proyek:
-- URL: `https://xrtfqufwbgbwgtwayuqt.supabase.co`
-
-Untuk mengaktifkan tabel penyimpanan di Supabase:
-1. Buka dashboard proyek Supabase Anda di browser.
-2. Masuk ke menu **SQL Editor**.
-3. Salin dan jalankan seluruh query DDL dari berkas `supabase/schema.sql`.
-4. Dapatkan **Anon Public Key** Anda dari menu **Project Settings > API**.
-5. Buka aplikasi KATALIS, klik tombol **Supabase Cloud**, masukkan Anon Key, dan klik **Simpan Diagram ke Cloud**.
 
 ---
 

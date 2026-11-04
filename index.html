@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KATALIS | Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis</title>
-  <meta name="description" content="Platform Pemodelan Proses Bisnis BPMN 2.0, Simulasi Token Dinamis, dan Integrasi Cloud Supabase dengan Antarmuka Vengeance UI" />
+  <meta name="description" content="Platform Portal Terpadu Pemodelan Proses Bisnis BPMN 2.0, Simulasi Token Dinamis, dan Instrumen Sistematis dengan Antarmuka Vengeance UI Mode Terang" />
 
   <!-- Favicon SVG -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%233b82f6'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%232563eb'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>" />
 
   <!-- Vendor CSS: BPMN-JS & Token Simulation -->
   <link rel="stylesheet" href="./dist/vendor/bpmn-js/assets/diagram-js.css" />
@@ -17,127 +17,452 @@
   <link rel="stylesheet" href="./dist/vendor/bpmn-js-properties-panel/assets/properties-panel.css" />
   <link rel="stylesheet" href="./dist/vendor/diagram-js-canvas-lock/assets/canvas-lock.css" />
 
-  <!-- Vengeance UI Theme & KATALIS Custom Stylesheet -->
+  <!-- Vengeance UI Theme & KATALIS Custom Stylesheet (Light Mode) -->
   <link rel="stylesheet" href="./styles/katalis-vengence.css" />
 </head>
 <body>
 
   <div class="katalis-app">
 
-    <!-- 1. Vengeance UI Spotlight Top Navbar -->
-    <header class="vng-navbar">
-      <div class="vng-brand" id="brand-home" title="KATALIS - Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis">
-        <div class="vng-logo-badge">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-          </svg>
-        </div>
-        <div class="vng-brand-info">
-          <div class="vng-brand-title">
-            KATALIS
-            <span class="tag">BPMN Token Sim</span>
+    <!-- ======================================================================
+         VIEW 1: PORTAL SHELL HUB (Bento Grid Catalog)
+         ====================================================================== -->
+    <div class="katalis-view active" id="view-hub">
+
+      <!-- Spotlight Top Navbar for Hub -->
+      <header class="vng-navbar">
+        <div class="vng-brand" id="hub-brand-home" title="KATALIS - Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis">
+          <div class="vng-logo-badge">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
           </div>
-          <div class="vng-brand-subtitle">Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis</div>
+          <div class="vng-brand-info">
+            <div class="vng-brand-title">
+              KATALIS
+              <span class="tag">Portal Hub</span>
+            </div>
+            <div class="vng-brand-subtitle">Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis</div>
+          </div>
         </div>
-      </div>
 
-      <div class="vng-nav-actions">
-        <!-- Pustaka Template -->
-        <button class="vng-btn" id="btn-templates" title="Pilih Template Proses Bisnis Standar">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-            <line x1="3" y1="9" x2="21" y2="9"/>
-            <line x1="9" y1="21" x2="9" y2="9"/>
-          </svg>
-          Template
-        </button>
-
-        <!-- Buka Berkas BPMN Lokal -->
-        <button class="vng-btn" id="btn-open-file" title="Buka berkas BPMN dari komputer (Ctrl+O)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-          </svg>
-          Buka
-        </button>
-
-        <!-- Sinkronisasi Supabase Cloud -->
-        <button class="vng-btn" id="btn-cloud-sync" title="Sinkronisasi Cloud Supabase Database">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
-          </svg>
-          Supabase Cloud
-        </button>
-
-        <!-- Unduh XML BPMN -->
-        <button class="vng-btn" id="btn-download-bpmn" title="Unduh diagram XML BPMN 2.0 (Ctrl+S)">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
-          </svg>
-          Unduh BPMN
-        </button>
-
-        <!-- Export SVG Gambar -->
-        <button class="vng-btn vng-btn-ghost" id="btn-export-svg" title="Ekspor visual diagram ke format vektor SVG">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2"/>
-            <circle cx="8.5" cy="8.5" r="1.5"/>
-            <polyline points="21 15 16 10 5 21"/>
-          </svg>
-          Export SVG
-        </button>
-
-        <!-- Toggle Properties Panel -->
-        <button class="vng-btn vng-btn-ghost active" id="btn-toggle-props" title="Buka/Tutup Panel Properti">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-            <line x1="15" y1="3" x2="15" y2="21"/>
-          </svg>
-          Panel
-        </button>
-      </div>
-    </header>
-
-    <!-- 2. Workspace Utama (Canvas + Properties) -->
-    <main class="katalis-workspace">
-      <div class="canvas-container">
-        <div class="vng-drop-message">Tarik dan letakkan berkas .bpmn ke sini untuk membuka diagram</div>
-        <div id="canvas"></div>
-      </div>
-
-      <!-- Properties Panel Drawer -->
-      <aside class="properties-panel-container">
-        <div class="properties-header">
-          <span>Properti Elemen BPMN</span>
+        <div class="vng-nav-actions">
+          <div style="font-size: 11px; font-weight: 500; color: var(--vng-text-muted); padding: 4px 10px; background: var(--vng-surface-alt); border-radius: var(--vng-radius-full); border: 1px solid var(--vng-border);">
+            100% Offline Local-First
+          </div>
+          <button class="vng-btn vng-btn-primary" id="btn-quick-launch-bpmn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+            Buka BPMN Simulator
+          </button>
         </div>
-        <div id="properties-panel"></div>
-      </aside>
-    </main>
+      </header>
 
-    <!-- 3. Vengeance Floating Glass Dock (Kontrol Simulasi Token) -->
-    <nav class="vng-dock">
-      <span class="status-indicator" id="sim-status-indicator" title="Status Simulasi Token"></span>
+      <!-- Hub Content Area -->
+      <div class="hub-container">
 
-      <button class="vng-dock-btn" id="btn-toggle-sim" title="Aktifkan / Nonaktifkan Mode Simulasi Token">
-        <svg viewBox="0 0 24 24" fill="currentColor">
-          <polygon points="5 3 19 12 5 21 5 3"/>
-        </svg>
-        <span>Mode Simulasi Token</span>
-      </button>
+        <!-- Hero Header -->
+        <section class="hub-hero">
+          <div class="hub-hero-badge">Portal Instrumen &amp; Analisis Sistematis</div>
+          <h1 class="hub-hero-title">Satu Portal Terpadu untuk Analisis Proses &amp; Kebutuhan Bisnis</h1>
+          <p class="hub-hero-subtitle">
+            Katalog instrumen profesional untuk pemodelan proses OMG BPMN 2.0, simulasi token interaktif, perancangan SLA, dan instrumen tata kelola operasional dengan arsitektur murni lokal offline.
+          </p>
+        </section>
 
-      <div class="vng-dock-divider"></div>
+        <!-- Bento Grid Catalog -->
+        <div class="hub-grid">
 
-      <button class="vng-dock-btn" id="btn-reset-sim" title="Reset semua token simulasi ke kondisi awal">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M1 4v6h6"/>
-          <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
-        </svg>
-        <span>Reset Token</span>
-      </button>
-    </nav>
+          <!-- Card 1: Active Tool (BPMN Modeler & Token Simulator) -->
+          <div class="hub-card active-card" id="card-tool-bpmn">
+            <div class="hub-card-header">
+              <div class="hub-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                  <line x1="3" y1="9" x2="21" y2="9"/>
+                  <line x1="9" y1="21" x2="9" y2="9"/>
+                </svg>
+              </div>
+              <span class="hub-card-badge badge-active">Siap Digunakan</span>
+            </div>
+            <div class="hub-card-title">BPMN 2.0 Modeler &amp; Token Simulator</div>
+            <div class="hub-card-desc">
+              Kanvas visual standar OMG BPMN 2.0 dengan mesin simulasi eksekusi token dinamis, evaluasi gerbang keputusan XOR/AND, inspeksi panel properti, serta impor/ekspor XML dan vektor SVG.
+            </div>
+            <div class="hub-card-features">
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Simulasi eksekusi token alur dinamis
+              </div>
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Panel properti teknis elemen BPMN
+              </div>
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Penyimpanan lokal browser tanpa server
+              </div>
+            </div>
+            <div class="hub-card-action">
+              <button class="vng-btn vng-btn-primary hub-card-btn" id="btn-enter-bpmn">
+                Buka Ruang Kerja BPMN
+              </button>
+            </div>
+          </div>
 
-    <!-- 4. Modal Pustaka Template BPMN (Vengeance Bento Grid) -->
+          <!-- Card 2: Roadmap Tool (SLA & Bottleneck Analyzer) -->
+          <div class="hub-card roadmap-card">
+            <div class="hub-card-header">
+              <div class="hub-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/>
+                  <polyline points="12 6 12 12 16 14"/>
+                </svg>
+              </div>
+              <span class="hub-card-badge badge-roadmap">Segera Hadir</span>
+            </div>
+            <div class="hub-card-title">SLA &amp; Bottleneck Analyzer</div>
+            <div class="hub-card-desc">
+              Instrumen komputasi durasi siklus kerja (lead time vs cycle time), estimasi throughput proses, dan deteksi otomatis titik kemacetan (bottleneck) pada jalur kritis aktivitas.
+            </div>
+            <div class="hub-card-features">
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Perhitungan durasi kritis alur kerja
+              </div>
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Peta panas (heatmap) beban aktivitas
+              </div>
+            </div>
+            <div class="hub-card-action">
+              <button class="vng-btn vng-btn-ghost hub-card-btn" disabled>
+                Dalam Pengembangan
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 3: Roadmap Tool (SOP & Policy Document Generator) -->
+          <div class="hub-card roadmap-card">
+            <div class="hub-card-header">
+              <div class="hub-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                  <polyline points="14 2 14 8 20 8"/>
+                  <line x1="16" y1="13" x2="8" y2="13"/>
+                  <line x1="16" y1="17" x2="8" y2="17"/>
+                  <polyline points="10 9 9 9 8 9"/>
+                </svg>
+              </div>
+              <span class="hub-card-badge badge-roadmap">Segera Hadir</span>
+            </div>
+            <div class="hub-card-title">SOP &amp; Policy Document Generator</div>
+            <div class="hub-card-desc">
+              Mesin otomatisasi konversi diagram proses BPMN 2.0 menjadi naskah narasi Standar Operasional Prosedur (SOP) formal Dasaria lengkap dengan matriks wewenang RACI.
+            </div>
+            <div class="hub-card-features">
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Matriks wewenang RACI otomatis
+              </div>
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Ekspor naskah narasi formal terstruktur
+              </div>
+            </div>
+            <div class="hub-card-action">
+              <button class="vng-btn vng-btn-ghost hub-card-btn" disabled>
+                Dalam Pengembangan
+              </button>
+            </div>
+          </div>
+
+          <!-- Card 4: Roadmap Tool (Process Conformance & Audit) -->
+          <div class="hub-card roadmap-card">
+            <div class="hub-card-header">
+              <div class="hub-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+              </div>
+              <span class="hub-card-badge badge-roadmap">Segera Hadir</span>
+            </div>
+            <div class="hub-card-title">Process Conformance &amp; Audit</div>
+            <div class="hub-card-desc">
+              Audit kualitas proses bisnis berbasis standar BEF4LLM: validasi sintaksis 16 metrik, audit kepatuhan skema OMG XSD, serta deteksi deadlock atau alur tanpa ujung.
+            </div>
+            <div class="hub-card-features">
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Validasi XSD skema resmi BPMN 2.0
+              </div>
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="2"/>
+                </svg>
+                Evaluasi kelayakan tata kelola proses
+              </div>
+            </div>
+            <div class="hub-card-action">
+              <button class="vng-btn vng-btn-ghost hub-card-btn" disabled>
+                Dalam Pengembangan
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ======================================================================
+         VIEW 2: TOOL WORKSPACE (BPMN 2.0 Modeler & Token Simulator)
+         ====================================================================== -->
+    <div class="katalis-view" id="view-tool-workspace">
+
+      <!-- Spotlight Top Navbar for Workspace -->
+      <header class="vng-navbar">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <!-- Toggle Sidebar Drawer -->
+          <button class="vng-btn" id="btn-toggle-sidebar" title="Buka/Tutup Navigasi Samping KATALIS">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <line x1="3" y1="6" x2="21" y2="6"/>
+              <line x1="3" y1="18" x2="21" y2="18"/>
+            </svg>
+          </button>
+
+          <!-- Brand -->
+          <div class="vng-brand" id="workspace-brand-home" title="Kembali ke Beranda Portal Hub">
+            <div class="vng-logo-badge">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div class="vng-brand-info">
+              <div class="vng-brand-title">
+                KATALIS
+                <span class="tag">BPMN Token Sim</span>
+              </div>
+              <div class="vng-brand-subtitle">Ruang Kerja Pemodelan &amp; Simulasi</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="vng-nav-actions">
+          <!-- Kembali ke Portal Hub -->
+          <button class="vng-btn" id="btn-back-hub" title="Kembali ke Katalog Portal Shell Hub">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="7" height="7"/>
+              <rect x="14" y="3" width="7" height="7"/>
+              <rect x="14" y="14" width="7" height="7"/>
+              <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Portal Hub
+          </button>
+
+          <!-- Pustaka Template -->
+          <button class="vng-btn" id="btn-templates" title="Pilih Template Proses Bisnis Terverifikasi">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="9" y1="21" x2="9" y2="9"/>
+            </svg>
+            Template
+          </button>
+
+          <!-- Buka Berkas BPMN Lokal -->
+          <button class="vng-btn" id="btn-open-file" title="Buka berkas BPMN dari komputer (Ctrl+O)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+            </svg>
+            Buka
+          </button>
+
+          <!-- Unduh XML BPMN -->
+          <button class="vng-btn" id="btn-download-bpmn" title="Unduh diagram XML BPMN 2.0 (Ctrl+S)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/>
+              <line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Unduh BPMN
+          </button>
+
+          <!-- Export SVG Gambar -->
+          <button class="vng-btn vng-btn-ghost" id="btn-export-svg" title="Ekspor visual diagram ke format vektor SVG">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            Export SVG
+          </button>
+
+          <!-- Sinkronisasi Supabase Cloud (Opsional) -->
+          <button class="vng-btn vng-btn-ghost" id="btn-cloud-sync" title="Koneksi Cloud Supabase Opsional">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+            </svg>
+            Cloud
+          </button>
+
+          <!-- Toggle Properties Panel -->
+          <button class="vng-btn vng-btn-ghost active" id="btn-toggle-props" title="Buka/Tutup Panel Properti">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <line x1="15" y1="3" x2="15" y2="21"/>
+            </svg>
+            Panel
+          </button>
+        </div>
+      </header>
+
+      <!-- Workspace Body (Sidebar Drawer + Canvas + Properties Panel) -->
+      <main class="katalis-workspace-container">
+
+        <!-- Sidebar Tab Navigation Drawer -->
+        <aside class="vng-sidebar-drawer" id="sidebar-drawer">
+          <div class="sidebar-header">
+            <div class="sidebar-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+              </svg>
+              Navigasi KATALIS
+            </div>
+            <button class="vng-btn vng-btn-ghost" id="btn-close-sidebar" style="padding: 2px 6px; height: 26px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+
+          <nav class="sidebar-nav">
+            <div class="sidebar-nav-item" id="drawer-nav-hub" title="Kembali ke Beranda Portal Shell Hub">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                <polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              Portal Shell Hub
+            </div>
+
+            <div class="sidebar-nav-divider">Instrumen Terpasang</div>
+
+            <div class="sidebar-nav-item active" id="drawer-nav-bpmn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                <line x1="3" y1="9" x2="21" y2="9"/>
+                <line x1="9" y1="21" x2="9" y2="9"/>
+              </svg>
+              BPMN 2.0 Simulator
+              <span class="item-badge" style="color: #059669; background: #ecfdf5; border-color: #a7f3d0;">Aktif</span>
+            </div>
+
+            <div class="sidebar-nav-divider">Peta Jalan (Roadmap)</div>
+
+            <div class="sidebar-nav-item disabled" title="Instrumen ini sedang dalam perancangan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              SLA &amp; Bottleneck
+              <span class="item-badge">Hadir</span>
+            </div>
+
+            <div class="sidebar-nav-item disabled" title="Instrumen ini sedang dalam perancangan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+              SOP Generator
+              <span class="item-badge">Hadir</span>
+            </div>
+
+            <div class="sidebar-nav-item disabled" title="Instrumen ini sedang dalam perancangan">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              Process Audit
+              <span class="item-badge">Hadir</span>
+            </div>
+          </nav>
+
+          <div class="sidebar-footer">
+            <div style="font-weight: 600; color: var(--vng-text-main);">Penyimpanan Lokal</div>
+            <div>Semua perubahan tersimpan di peramban secara otomatis tanpa server.</div>
+            <div style="margin-top: 4px; font-size: 10px; color: var(--vng-text-subtle);">KATALIS v1.0.0 &bull; Light Mode</div>
+          </div>
+        </aside>
+
+        <!-- Canvas Area -->
+        <div class="canvas-container">
+          <div class="vng-drop-message">Tarik dan letakkan berkas .bpmn ke sini untuk membuka diagram</div>
+          <div id="canvas"></div>
+        </div>
+
+        <!-- Properties Panel Drawer -->
+        <aside class="properties-panel-container">
+          <div class="properties-header">
+            <span>Properti Elemen BPMN</span>
+          </div>
+          <div id="properties-panel"></div>
+        </aside>
+
+      </main>
+
+      <!-- Floating Glass Dock (Kontrol Simulasi Token) -->
+      <nav class="vng-dock">
+        <span class="status-indicator" id="sim-status-indicator" title="Status Simulasi Token"></span>
+
+        <button class="vng-dock-btn" id="btn-toggle-sim" title="Aktifkan / Nonaktifkan Mode Simulasi Token">
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <span>Mode Simulasi Token</span>
+        </button>
+
+        <div class="vng-dock-divider"></div>
+
+        <button class="vng-dock-btn" id="btn-reset-sim" title="Reset semua token simulasi ke kondisi awal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 4v6h6"/>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+          </svg>
+          <span>Reset Token</span>
+        </button>
+      </nav>
+
+    </div>
+
+
+    <!-- ======================================================================
+         MODALS
+         ====================================================================== -->
+
+    <!-- Modal Pustaka Template BPMN (Bento Grid) -->
     <div class="vng-modal-backdrop" id="modal-templates">
       <div class="vng-modal">
         <div class="vng-modal-header">
@@ -179,7 +504,7 @@
       </div>
     </div>
 
-    <!-- 5. Modal Supabase Cloud Sync -->
+    <!-- Modal Supabase Cloud Sync (Opsional) -->
     <div class="vng-modal-backdrop" id="modal-cloud">
       <div class="vng-modal">
         <div class="vng-modal-header">
@@ -187,7 +512,7 @@
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
             </svg>
-            Koneksi Cloud Supabase Database
+            Koneksi Cloud Supabase (Opsional)
           </div>
           <button class="vng-btn vng-btn-ghost" id="btn-close-cloud" style="padding: 4px 8px;">Tutup</button>
         </div>
@@ -201,7 +526,7 @@
           <div class="vng-form-group">
             <label class="vng-label">Supabase Anon Key / Public API Key</label>
             <input type="password" class="vng-input" id="input-supabase-key" placeholder="Masukkan Supabase Anon Key..." />
-            <small style="display:block; margin-top: 4px; font-size: 11px; color: var(--vng-text-subtle);">Key disimpan aman di LocalStorage browser pengguna. Tanpa key, diagram otomatis tersimpan di penyimpanan lokal.</small>
+            <small style="display:block; margin-top: 4px; font-size: 11px; color: var(--vng-text-subtle);">Opsional. Tanpa key, diagram otomatis tersimpan 100% aman di LocalStorage browser pengguna.</small>
           </div>
 
           <div class="vng-form-group">
@@ -210,8 +535,8 @@
           </div>
 
           <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 20px;">
-            <div id="sync-status-text" style="font-size: 12px; color: #93c5fd;">Siap sinkronisasi</div>
-            <button class="vng-btn vng-btn-primary" id="btn-save-cloud">Simpan Diagram ke Cloud</button>
+            <div id="sync-status-text" style="font-size: 12px; color: #2563eb;">Siap sinkronisasi</div>
+            <button class="vng-btn vng-btn-primary" id="btn-save-cloud">Simpan ke Cloud</button>
           </div>
         </div>
       </div>

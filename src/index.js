@@ -1,7 +1,8 @@
 /* ==========================================================================
    KATALIS - Main Application Engine
    Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis
-   Modeler BPMN 2.0 + Token Simulation + Vengeance UI + Supabase Cloud
+   Modeler BPMN 2.0 + Token Simulation + Vengeance UI + Portal Hub
+   Author: DARWANZA / PEREKAYASA
    ========================================================================== */
 
 import BpmnModeler from 'bpmn-js/lib/Modeler';
@@ -32,10 +33,12 @@ import {
 // State global aplikasi
 let currentFileName = 'katalis-diagram.bpmn';
 let isSimulationActive = false;
+let currentView = 'hub'; // 'hub' atau 'workspace'
 
 // URL parameters
 const url = new URL(window.location.href);
 const autoSimulate = url.searchParams.has('sim') || url.searchParams.has('e');
+const directTool = url.searchParams.get('tool') === 'bpmn' || autoSimulate;
 
 // Inisialisasi Modeler BPMN
 const modeler = new BpmnModeler({
@@ -67,7 +70,11 @@ export function openDiagram(xmlString) {
       } catch (e) {
         // Abaikan jika storage penuh
       }
-      modeler.get('canvas').zoom('fit-viewport');
+      setTimeout(() => {
+        try {
+          modeler.get('canvas').zoom('fit-viewport');
+        } catch (e) {}
+      }, 50);
     })
     .catch(err => {
       console.error('Gagal memuat XML BPMN:', err);
@@ -81,7 +88,6 @@ const eventBus = modeler.get('eventBus');
 eventBus.on('tokenSimulation.toggleMode', (event) => {
   isSimulationActive = event.active;
   const toggleBtn = document.getElementById('btn-toggle-sim');
-  const playBtn = document.getElementById('btn-play-sim');
   const simIndicator = document.getElementById('sim-status-indicator');
 
   if (toggleBtn) {
@@ -90,10 +96,29 @@ eventBus.on('tokenSimulation.toggleMode', (event) => {
   if (simIndicator) {
     simIndicator.classList.toggle('live', isSimulationActive);
   }
-  if (playBtn) {
-    playBtn.disabled = !isSimulationActive;
-  }
 });
+
+// Fungsi Switch View (Hub <--> Tool Workspace)
+export function switchView(targetView) {
+  currentView = targetView;
+  const viewHub = document.getElementById('view-hub');
+  const viewWorkspace = document.getElementById('view-tool-workspace');
+
+  if (targetView === 'workspace') {
+    if (viewHub) viewHub.classList.remove('active');
+    if (viewWorkspace) viewWorkspace.classList.add('active');
+
+    // Sesuaikan zoom canvas saat view dibuka
+    setTimeout(() => {
+      try {
+        modeler.get('canvas').zoom('fit-viewport');
+      } catch (e) {}
+    }, 100);
+  } else {
+    if (viewWorkspace) viewWorkspace.classList.remove('active');
+    if (viewHub) viewHub.classList.add('active');
+  }
+}
 
 // Muat diagram awal
 const savedDiagram = localStorage.getItem('katalis-diagram-xml');
@@ -117,18 +142,71 @@ function handleDroppedFiles(files) {
   if (!files || !files.length) return;
   currentFileName = files[0].name;
   openDiagram(files[0].contents);
+  switchView('workspace');
 }
 
 document.body.addEventListener('dragover', fileDrop('Buka diagram BPMN di KATALIS', handleDroppedFiles), false);
 
-// Setup Handler Aksi Vengeance UI
+// Setup Handler Aksi Vengeance UI & Navigasi
 document.addEventListener('DOMContentLoaded', () => {
   initSupabase();
 
-  // 1. Tombol Simulasi
+  // 1. Tentukan Tampilan Awal (Default: Portal Hub, kecuali parameter direct)
+  if (directTool) {
+    switchView('workspace');
+  } else {
+    switchView('hub');
+  }
+
+  // 2. Navigasi Router Hub <--> Workspace
+  const btnEnterBpmn = document.getElementById('btn-enter-bpmn');
+  const btnQuickLaunchBpmn = document.getElementById('btn-quick-launch-bpmn');
+  const btnBackHub = document.getElementById('btn-back-hub');
+  const drawerNavHub = document.getElementById('drawer-nav-hub');
+  const workspaceBrandHome = document.getElementById('workspace-brand-home');
+  const drawerNavBpmn = document.getElementById('drawer-nav-bpmn');
+
+  if (btnEnterBpmn) {
+    btnEnterBpmn.addEventListener('click', () => switchView('workspace'));
+  }
+  if (btnQuickLaunchBpmn) {
+    btnQuickLaunchBpmn.addEventListener('click', () => switchView('workspace'));
+  }
+  if (btnBackHub) {
+    btnBackHub.addEventListener('click', () => switchView('hub'));
+  }
+  if (drawerNavHub) {
+    drawerNavHub.addEventListener('click', () => switchView('hub'));
+  }
+  if (workspaceBrandHome) {
+    workspaceBrandHome.addEventListener('click', () => switchView('hub'));
+  }
+  if (drawerNavBpmn) {
+    drawerNavBpmn.addEventListener('click', () => switchView('workspace'));
+  }
+
+  // 3. Sidebar Drawer Toggle
+  const btnToggleSidebar = document.getElementById('btn-toggle-sidebar');
+  const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+  const sidebarDrawer = document.getElementById('sidebar-drawer');
+
+  if (btnToggleSidebar && sidebarDrawer) {
+    btnToggleSidebar.addEventListener('click', () => {
+      sidebarDrawer.classList.toggle('collapsed');
+      btnToggleSidebar.classList.toggle('vng-btn-active', !sidebarDrawer.classList.contains('collapsed'));
+    });
+  }
+
+  if (btnCloseSidebar && sidebarDrawer) {
+    btnCloseSidebar.addEventListener('click', () => {
+      sidebarDrawer.classList.add('collapsed');
+      if (btnToggleSidebar) btnToggleSidebar.classList.remove('vng-btn-active');
+    });
+  }
+
+  // 4. Tombol Simulasi Token
   const btnToggleSim = document.getElementById('btn-toggle-sim');
   const btnResetSim = document.getElementById('btn-reset-sim');
-  const btnStepSim = document.getElementById('btn-step-sim');
 
   if (btnToggleSim) {
     btnToggleSim.addEventListener('click', () => {
@@ -148,7 +226,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2. Tombol Download & Export
+  // 5. Tombol Download & Export
   const btnDownloadBpmn = document.getElementById('btn-download-bpmn');
   const btnExportSvg = document.getElementById('btn-export-svg');
   const btnOpenFile = document.getElementById('btn-open-file');
@@ -176,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Properties Panel Toggle
+  // 6. Properties Panel Toggle
   const btnToggleProps = document.getElementById('btn-toggle-props');
   const propsContainer = document.querySelector('.properties-panel-container');
 
@@ -187,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 4. Modal Templates
+  // 7. Modal Templates
   const modalTemplates = document.getElementById('modal-templates');
   const btnOpenTemplates = document.getElementById('btn-templates');
   const btnCloseTemplates = document.getElementById('btn-close-templates');
@@ -216,6 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
         targetXml = BLANK_BPMN;
         currentFileName = 'katalis-baru.bpmn';
       } else {
+        targetXml = SAMPLE_SIMULATION_BPMN;
         currentFileName = 'katalis-simulasi.bpmn';
       }
       openDiagram(targetXml);
@@ -225,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 5. Modal Supabase Cloud Sync
+  // 8. Modal Supabase Cloud Sync (Opsional)
   const modalCloud = document.getElementById('modal-cloud');
   const btnOpenCloud = document.getElementById('btn-cloud-sync');
   const btnCloseCloud = document.getElementById('btn-close-cloud');
@@ -270,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Keyboard Shortcuts
+  // 9. Keyboard Shortcuts
   window.addEventListener('keydown', (e) => {
     if (e.code === 'KeyS' && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
