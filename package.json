@@ -1,0 +1,44 @@
+{
+  "name": "katalis",
+  "version": "1.0.0",
+  "description": "KATALIS (Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis) - Platform pemodelan proses bisnis BPMN 2.0, simulasi token dinamis, pustaka template sistematis, dan integrasi cloud Supabase dengan desain antarmuka Vengeance UI.",
+  "homepage": "https://mualnudarza.github.io/KATALIS/",
+  "author": "DARWANZA <katalis@mualnudarza.io>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Mualnudarza/KATALIS.git"
+  },
+  "scripts": {
+    "start": "webpack serve --mode development --open",
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development"
+  },
+  "dependencies": {
+    "@bpmn-io/add-exporter": "^0.2.0",
+    "@bpmn-io/cm-theme": "^0.2.0",
+    "@bpmn-io/diagram-js-canvas-lock": "^0.1.0",
+    "@bpmn-io/properties-panel": "^3.47.0",
+    "@bpmn-io/theme": "^0.3.0",
+    "@supabase/supabase-js": "^2.49.1",
+    "bpmn-js": "^18.30.0",
+    "bpmn-js-properties-panel": "^5.60.0",
+    "diagram-js": "^15.27.0",
+    "downloadjs": "^1.4.7",
+    "file-drops": "^0.7.0",
+    "file-open": "^0.2.0",
+    "ids": "^3.0.2",
+    "inherits-browser": "^0.1.0",
+    "min-dash": "^5.0.0",
+    "min-dom": "^5.3.0",
+    "randomcolor": "^0.6.2"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^12.0.2",
+    "css-loader": "^7.1.2",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0"
+  }
+}
