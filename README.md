@@ -19,20 +19,29 @@ Platform portal terpadu untuk pemodelan proses bisnis BPMN 2.0, simulasi token d
 1. **Portal Shell Hub**:
    - Beranda pembuka berbentuk katalog Bento Grid untuk memilih instrumen dan alat kerja sistematis.
    - Modul aktif: *BPMN 2.0 Modeler & Token Simulator*.
+   - Modul aktif: *Draw.io Studio (Dual-Mode: AI-Assisted & Pure Zero Build)*.
    - Kartu rencana instrumen mendatang (*Roadmap Cards*): SLA & Cycle Time Analyzer, SOP Document Generator, Process Compliance Audit.
 
 2. **Ruang Kerja Pemodelan & Simulasi Token BPMN 2.0**:
    - Kanvas visual OMG BPMN 2.0 standar internasional (`bpmn-js`).
+   - Fitur pewarnaan notasi bebas spektrum penuh (OMG BPMN in Color).
+   - Panel properti kustom: grup Deskripsi dan grup Lampiran dokumen acuan in-app preview modal.
    - Mesin eksekusi simulasi token dinamis langkah-demi-langkah (`bpmn-js-token-simulation`).
    - Floating Glass Dock untuk kendali pemutaran simulasi (Play, Step, Reset, dan Status Pulsa).
    - Sidebar Tab Navigasi untuk berpindah antar-alat dan kembali ke Beranda Portal Hub.
 
-3. **Penyimpanan Lokal Murni (100% Offline)**:
-   - Beroperasi langsung di peramban tanpa kewajiban autentikasi akun atau server database.
-   - Diagram tersimpan aman di penyimpanan lokal peramban (*LocalStorage*).
-   - Ekspor dan impor file standar XML BPMN 2.0 serta ekspor gambar vektor SVG resolusi tinggi.
+3. **Draw.io Studio (Dual-Mode: AI-Assisted & Pure Zero Build)**:
+   - **Ephemeral AI Gate**: Modal onboarding sesi sementara untuk konfigurasi Endpoint (default acuan 9Router `http://localhost:20128/v1`) dan API Key (aman terhapus saat tab ditutup).
+   - **Mode 1 (Pure Zero)**: Kanvas Draw.io layar penuh murni manual untuk perancangan bebas tanpa AI.
+   - **Mode 2 (AI-Assisted)**: Split-view dengan AI Assistant Drawer untuk membuat dan merevisi diagram arsitektur/flowchart dari instruksi teks alami secara streaming via postMessage.
+   - Kompatibel dengan format file standar Draw.io (`.drawio`, `.xml`, `.png`, `.svg`).
 
-4. **Desain Antarmuka Vengeance UI Mode Terang**:
+4. **Penyimpanan Lokal Murni & Keamanan Sesi**:
+   - Diagram BPMN beroperasi langsung di peramban tanpa kewajiban autentikasi akun atau server database (*LocalStorage*).
+   - Kredensial AI bersifat sementara (*SessionStorage*) dengan prinsip Zero-Retention.
+   - Ekspor dan impor file standar XML BPMN 2.0, Draw.io XML, serta gambar resolusi tinggi PNG 2x Retina dan SVG.
+
+5. **Desain Antarmuka Vengeance UI Mode Terang**:
    - Tampilan terang cerah berorientasi ketelitian analisis (*Clean Light Zinc #F8FAFC & #FFFFFF*).
    - Spotlight Top Navbar dengan backdrop blur halus.
    - Floating Glass Dock melayang yang ergonomis.

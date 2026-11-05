@@ -106,6 +106,45 @@ Dilarang menggunakan nilai warna arbitrer di luar tabel heksadesimal resmi berik
 - Teks label: `#64748B`
 - Masukan input panel: `#F8FAFC` dengan border `#E2E8F0`, teks `#0F172A`
 
+### F. Ephemeral AI Gate Modal (Dialog Onboarding Sesi Sementara)
+- Posisi: Terpusat di tengah viewport (`fixed; inset: 0; z-index: 9999`) dengan latar belakang peredup semi-transparan (`background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(8px)`)
+- Kartu Modal: Latar `#FFFFFF`, border `1px solid #E2E8F0`, sudut `border-radius: 16px`, bayangan `0 25px 50px -12px rgba(0, 0, 0, 0.15)`
+- Lebar maksimum: 540px, padding internal 28px
+- Elemen Kunci:
+  - Header: Ikon otak sirkuit, judul "Aktivasi Asisten AI Draw.io", sub-judul "Konfigurasi sesi sementara (kredensial hilang otomatis saat tab ditutup)"
+  - Kotak Peringatan Sesi: Latar `#EFF6FF`, border `1px solid #BFDBFE`, teks `#1E40AF` (menjelaskan prinsip Zero-Retention)
+  - Formulir Input:
+    - Input Endpoint API (Default: `http://localhost:20128/v1` acuan 9Router)
+    - Input API Key / Token Bearer (Tipe password dengan tombol lihat/sembunyikan)
+    - Input Model ID (Placeholder: `kr/claude-sonnet-4.5`, `deepseek-chat`, dsb.)
+  - Tombol Aksi:
+    - Tombol Primer: "Aktifkan Mode AI" (Biru `#2563EB`)
+    - Tombol Sekunder / Ghost: "Bangun Dari Nol (Tanpa AI)" (Teks `#64748B`, border transparan)
+
+### G. AI Assistant Drawer (Ruang Kerja Split-View Draw.io)
+- Posisi: Menempel di sisi kiri ruang kerja Draw.io (`width: 380px; height: 100%`)
+- Latar: `#FFFFFF` dengan pemisah batas kanan `1px solid #E2E8F0`
+- Header Drawer: Menampilkan label "Asisten AI", indikator status endpoint hijau, tombol ciutkan (*collapse*), dan tombol atur ulang sesi (*reset credentials*)
+- Area Obrolan: Daftar gelembung pesan riwayat interaksi prompt
+  - Pesan Pengguna: Gelembung biru muda `#EFF6FF` dengan batas `#DBEAFE`, teks `#1E3A8A`
+  - Pesan AI: Gelembung abu-abu halus `#F8FAFC` dengan batas `#E2E8F0`, teks `#0F172A`
+  - Indikator Streaming: Lencana animasi pulsa lembut saat token XML sedang disusun
+- Input Prompt: Area pengetikan teks (`textarea`) di bagian bawah dengan tombol kirim berikon panah sudut, mendukung kombinasi `Shift + Enter` untuk baris baru
+
+### H. Draw.io Embedded Canvas Container
+- Posisi: Mengisi sisa ruang pandang di sebelah AI Drawer (atau 100% penuh pada mode Pure Zero)
+- Latar: `#F8FAFC`
+- Elemen Iframe: `border: none; width: 100%; height: 100%` memuat `https://embed.diagrams.net/?embed=1&proto=json&configure=1`
+- Loading State: Indikator putar (*spinner*) Vengeance UI dengan teks "Memuat Kanvas Draw.io..." saat iframe menginisialisasi protokol
+
+### I. AI Connection Status Badge (Bilah Atas & Ruang Kerja)
+- Latar: `#F1F5F9` dengan border `1px solid #E2E8F0`
+- Sudut: `border-radius: 9999px` (kapsul)
+- Teks: 11px, Medium, `#0F172A`
+- Titik Indikator: Lingkaran 6px
+  - Hijau (`#10B981`): Terkoneksi ke gateway AI (9Router / OpenAI Compatible)
+  - Abu-abu (`#94A3B8`): Mode Manual Murni (Tanpa AI)
+
 ---
 
 ## 07 Icons & Visual Symbols
