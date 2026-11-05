@@ -35,15 +35,20 @@ import {
   getSupabaseConfig
 } from './supabase';
 
+import { DrawioWorkspace } from './tools/drawio/drawioWorkspace';
+import { AiGateModal } from './tools/drawio/aiGateModal';
+
 // State global aplikasi
 let currentFileName = 'katalis-diagram.bpmn';
 let isSimulationActive = false;
-let currentView = 'hub'; // 'hub' atau 'workspace'
+let currentView = 'hub'; // 'hub', 'workspace', atau 'drawio'
+let drawioWorkspaceInstance = null;
 
 // URL parameters
 const url = new URL(window.location.href);
 const autoSimulate = url.searchParams.has('sim') || url.searchParams.has('e');
 const directTool = url.searchParams.get('tool') === 'bpmn' || autoSimulate;
+const directDrawio = url.searchParams.get('tool') === 'drawio';
 
 // Inisialisasi Modeler BPMN
 const modeler = new BpmnModeler({
@@ -220,14 +225,29 @@ eventBus.on('tokenSimulation.toggleMode', (event) => {
   }
 });
 
-// Fungsi Switch View (Hub <--> Tool Workspace)
-export function switchView(targetView) {
+// Fungsi Buka Modal Ephemeral AI Gate
+export function openAiGateModal() {
+  const modal = new AiGateModal({
+    onSuccess: (mode) => {
+      switchView('drawio', mode);
+    },
+    onSkip: (mode) => {
+      switchView('drawio', mode);
+    }
+  });
+  modal.open();
+}
+
+// Fungsi Switch View (Hub <--> BPMN Workspace <--> Draw.io Studio)
+export function switchView(targetView, initialMode = 'pure-zero') {
   currentView = targetView;
   const viewHub = document.getElementById('view-hub');
   const viewWorkspace = document.getElementById('view-tool-workspace');
+  const viewDrawio = document.getElementById('view-drawio-workspace');
 
-  if (targetView === 'workspace') {
+  if (targetView === 'workspace' || targetView === 'bpmn') {
     if (viewHub) viewHub.classList.remove('active');
+    if (viewDrawio) viewDrawio.classList.remove('active');
     if (viewWorkspace) viewWorkspace.classList.add('active');
 
     // Sesuaikan zoom canvas dan grid saat workspace dibuka
@@ -237,8 +257,24 @@ export function switchView(targetView) {
         updateDynamicGrid();
       } catch (e) {}
     }, 100);
+  } else if (targetView === 'drawio') {
+    if (viewHub) viewHub.classList.remove('active');
+    if (viewWorkspace) viewWorkspace.classList.remove('active');
+    if (viewDrawio) {
+      viewDrawio.classList.add('active');
+      if (!drawioWorkspaceInstance) {
+        drawioWorkspaceInstance = new DrawioWorkspace({
+          onNavigateHub: () => switchView('hub'),
+          onRequestAiGate: () => openAiGateModal()
+        });
+        drawioWorkspaceInstance.mount(viewDrawio, initialMode);
+      } else {
+        drawioWorkspaceInstance.setMode(initialMode);
+      }
+    }
   } else {
     if (viewWorkspace) viewWorkspace.classList.remove('active');
+    if (viewDrawio) viewDrawio.classList.remove('active');
     if (viewHub) viewHub.classList.add('active');
   }
 }
@@ -275,21 +311,28 @@ document.addEventListener('DOMContentLoaded', () => {
   initSupabase();
 
   // 1. Tentukan Tampilan Awal (Default: Portal Hub, kecuali parameter direct)
-  if (directTool) {
+  if (directDrawio) {
+    openAiGateModal();
+  } else if (directTool) {
     switchView('workspace');
   } else {
     switchView('hub');
   }
 
-  // 2. Navigasi Router Hub <--> Workspace
+  // 2. Navigasi Router Hub <--> BPMN Workspace <--> Draw.io Studio
   const btnEnterBpmn = document.getElementById('btn-enter-bpmn');
+  const btnEnterDrawio = document.getElementById('btn-enter-drawio');
   const btnBackHub = document.getElementById('btn-back-hub');
   const drawerNavHub = document.getElementById('drawer-nav-hub');
   const workspaceBrandHome = document.getElementById('workspace-brand-home');
   const drawerNavBpmn = document.getElementById('drawer-nav-bpmn');
+  const drawerNavDrawio = document.getElementById('drawer-nav-drawio');
 
   if (btnEnterBpmn) {
     btnEnterBpmn.addEventListener('click', () => switchView('workspace'));
+  }
+  if (btnEnterDrawio) {
+    btnEnterDrawio.addEventListener('click', () => openAiGateModal());
   }
   if (btnBackHub) {
     btnBackHub.addEventListener('click', () => switchView('hub'));
@@ -302,6 +345,9 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   if (drawerNavBpmn) {
     drawerNavBpmn.addEventListener('click', () => switchView('workspace'));
+  }
+  if (drawerNavDrawio) {
+    drawerNavDrawio.addEventListener('click', () => openAiGateModal());
   }
 
   // 3. Sidebar Drawer Toggle

@@ -107,6 +107,49 @@
             </div>
           </div>
 
+          <!-- Card 2: Active Tool (Draw.io Studio - Dual-Mode: AI & Pure Zero) -->
+          <div class="hub-card active-card" id="card-tool-drawio">
+            <div class="hub-card-header">
+              <div class="hub-card-icon" style="color: #2563eb; background: #eff6ff;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                  <polyline points="2 17 12 22 22 17"/>
+                  <polyline points="2 12 12 17 22 12"/>
+                </svg>
+              </div>
+              <span class="hub-card-badge badge-active">Siap Digunakan</span>
+            </div>
+            <div class="hub-card-title">Draw.io Studio (Dual-Mode)</div>
+            <div class="hub-card-desc">
+              Perancangan diagram arsitektur sistem, cloud topology, dan flowchart dengan pilihan asisten AI generatif (OpenAI/9Router-compatible) atau kanvas manual murni dari nol.
+            </div>
+            <div class="hub-card-features">
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Asisten AI generatif via gateway 9Router/OpenAI
+              </div>
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Kanvas Draw.io standar industri serbaguna
+              </div>
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Keamanan sesi sementara (Zero-Retention Ephemeral)
+              </div>
+            </div>
+            <div class="hub-card-action">
+              <button class="vng-btn vng-btn-primary hub-card-btn" id="btn-enter-drawio">
+                Buka Draw.io Studio
+              </button>
+            </div>
+          </div>
+
           <!-- Card 2: Roadmap Tool (SLA & Bottleneck Analyzer) -->
           <div class="hub-card roadmap-card">
             <div class="hub-card-header">
@@ -381,6 +424,16 @@
               <span class="item-badge" style="color: #059669; background: #ecfdf5; border-color: #a7f3d0;">Aktif</span>
             </div>
 
+            <div class="sidebar-nav-item" id="drawer-nav-drawio" title="Buka Draw.io Studio">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                <polyline points="2 17 12 22 22 17"/>
+                <polyline points="2 12 12 17 22 12"/>
+              </svg>
+              Draw.io Studio
+              <span class="item-badge" style="color: #059669; background: #ecfdf5; border-color: #a7f3d0;">Aktif</span>
+            </div>
+
             <div class="sidebar-nav-divider">Peta Jalan (Roadmap)</div>
 
             <div class="sidebar-nav-item disabled" title="Instrumen ini sedang dalam perancangan">
@@ -455,6 +508,14 @@
 
       </main>
 
+    </div>
+
+
+    <!-- ======================================================================
+         VIEW 3: DRAW.IO STUDIO WORKSPACE (Dual-Mode: AI & Pure Zero)
+         ====================================================================== -->
+    <div class="katalis-view" id="view-drawio-workspace">
+      <!-- Diisi secara dinamis oleh DrawioWorkspace.mount() -->
     </div>
 
 
