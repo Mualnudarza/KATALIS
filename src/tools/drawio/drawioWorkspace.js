@@ -314,15 +314,20 @@ export class DrawioWorkspace {
   /**
    * Mengirim prompt pengguna ke model AI dan mengalirkan respons
    */
-  async submitPrompt() {
+  async submitPrompt(retryText = null) {
     const input = document.getElementById('drawio-ai-prompt-input');
-    if (!input || this.isStreaming) return;
+    if (this.isStreaming) return;
 
-    const userText = input.value.trim();
+    const userText = retryText !== null ? retryText : (input ? input.value.trim() : '');
     if (!userText) return;
 
-    input.value = '';
-    this.appendMessage('user', userText);
+    if (input && retryText === null) {
+      input.value = '';
+    }
+
+    if (retryText === null) {
+      this.appendMessage('user', userText);
+    }
 
     // Ambil diagram aktif untuk konteks
     let activeXml = this.currentDiagramXml;
@@ -394,8 +399,71 @@ export class DrawioWorkspace {
         onError: (err) => {
           this.setStreamingState(false);
           if (aiBubble) {
-            aiBubble.innerHTML = `<span class="ai-error-text">Gagal menyusun diagram: ${err.message}</span>`;
+            const isHttps = typeof window !== 'undefined' && window.location && window.location.protocol === 'https:';
+            const creds = getAiCredentials();
+            const isHttpEndpoint = (creds?.endpoint || '').startsWith('http://');
+
+            if (isHttps && isHttpEndpoint) {
+              aiBubble.innerHTML = `
+                <div class="ai-error-box">
+                  <div class="ai-error-header">
+                    <span class="ai-error-badge">Kendala Akses HTTPS</span>
+                    <strong class="ai-error-title">Endpoint HTTP Dibatasi di GitHub Pages</strong>
+                  </div>
+                  <p class="ai-error-desc">
+                    Halaman ini berjalan di GitHub Pages (HTTPS), sehingga peramban membatasi koneksi langsung ke HTTP lokal (${this.escapeHtml(creds?.endpoint || 'localhost')}).
+                  </p>
+                  <ul class="ai-error-solutions">
+                    <li>Gunakan penyedia HTTPS seperti <strong>OpenRouter</strong>, <strong>Groq</strong>, atau <strong>DeepSeek</strong> di GitHub Pages.</li>
+                    <li>Atau jalankan KATALIS di komputer lokal via <code>npm start</code> (http://localhost:8080) untuk memakai 9Router lokal tanpa batasan.</li>
+                  </ul>
+                  <div class="ai-error-actions">
+                    <button class="vng-btn vng-btn-xs vng-btn-primary btn-reconfig-ai">
+                      Pilih Preset Gateway AI
+                    </button>
+                    <button class="vng-btn vng-btn-xs vng-btn-secondary btn-retry-prompt">
+                      Coba Lagi
+                    </button>
+                  </div>
+                </div>
+              `;
+            } else {
+              aiBubble.innerHTML = `
+                <div class="ai-error-box">
+                  <div class="ai-error-header">
+                    <span class="ai-error-badge">Kendala Koneksi</span>
+                    <strong class="ai-error-title">Gagal Menyusun Diagram</strong>
+                  </div>
+                  <p class="ai-error-desc">${this.escapeHtml(err.message)}</p>
+                  <div class="ai-error-actions">
+                    <button class="vng-btn vng-btn-xs vng-btn-primary btn-reconfig-ai">
+                      Ubah Konfigurasi AI
+                    </button>
+                    <button class="vng-btn vng-btn-xs vng-btn-secondary btn-retry-prompt">
+                      Coba Lagi
+                    </button>
+                  </div>
+                </div>
+              `;
+            }
+
+            const btnReconfig = aiBubble.querySelector('.btn-reconfig-ai');
+            if (btnReconfig) {
+              btnReconfig.addEventListener('click', () => {
+                if (this.options.onRequestAiGate) {
+                  this.options.onRequestAiGate();
+                }
+              });
+            }
+
+            const btnRetry = aiBubble.querySelector('.btn-retry-prompt');
+            if (btnRetry) {
+              btnRetry.addEventListener('click', () => {
+                this.submitPrompt(userText);
+              });
+            }
           }
+          this.scrollMessagesToBottom();
         }
       });
     } catch (err) {

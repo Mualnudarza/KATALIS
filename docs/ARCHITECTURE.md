@@ -219,5 +219,9 @@ Arsitektur KATALIS dirancang agar modular untuk penambahan alat/instrumen sistem
 3. **Isolasi Penyimpanan & Keamanan Data**:
    - Data diagram permanen menggunakan namespace unik (misal: `katalis_bpmn_state`).
    - Data kredensial sensitif wajib menggunakan `sessionStorage` atau *in-memory runtime state* dengan mekanisme pembersihan otomatis (*auto-purge*) saat sesi berakhir.
-4. **Strategi Iframe Tersemat Resmi untuk GitHub Pages**:
+4. **Strategi Integrasi AI Dual-Target (Lokal vs Cloud HTTPS)**:
+   - *GitHub Pages (`https:`)*: Disediakan preset cerdas untuk penyedia gateway HTTPS (OpenRouter, Groq, DeepSeek) guna memastikan enkripsi end-to-end tanpa terbentur kebijakan W3C Active Mixed Content.
+   - *Lingkungan Lokal (`http://localhost`)*: Mendukung penuh koneksi langsung tanpa hambatan ke 9Router lokal di port 20128.
+   - Modal onboarding dilengkapi pendeteksi lingkungan otomatis dan tombol pill pemilihan preset instan.
+5. **Strategi Iframe Tersemat Resmi untuk GitHub Pages**:
    - Menghindari pemaketan repositori monolitik berat. Menggunakan URL embed resmi yang dikendalikan oleh protokol postMessage JSON standar industri.

@@ -265,6 +265,50 @@ html, body {
   box-shadow: 0 0 10px rgba(37, 99, 235, 0.12);
 }
 
+.vng-btn-secondary {
+  background: #ffffff;
+  border-color: var(--vng-border);
+  color: var(--vng-text-main);
+}
+
+.vng-btn-secondary:hover {
+  background: var(--vng-surface-alt);
+  border-color: #cbd5e1;
+}
+
+.vng-btn-outline {
+  background: transparent;
+  border-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+.vng-btn-outline:hover {
+  background: #eff6ff;
+  border-color: var(--vng-primary);
+}
+
+.vng-btn-danger {
+  background: #ef4444;
+  border-color: #dc2626;
+  color: #ffffff;
+}
+
+.vng-btn-danger:hover {
+  background: #dc2626;
+}
+
+.vng-btn-sm {
+  height: 32px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.vng-btn-xs {
+  height: 26px;
+  padding: 0 8px;
+  font-size: 11px;
+}
+
 /* ==========================================================================
    2. Portal Shell Hub View (Bento Grid Catalog)
    ========================================================================== */
@@ -1760,3 +1804,186 @@ html, body {
     bottom: 0;
   }
 }
+
+/* ==========================================================================
+   Dual-Target AI Preset Pills & Environment Feedback
+   ========================================================================== */
+.ai-env-tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--vng-radius-full);
+}
+
+.ai-env-tag.https {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1e40af;
+}
+
+.ai-env-tag.local {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.ai-preset-wrapper {
+  margin-bottom: 16px;
+}
+
+.ai-preset-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+}
+
+@media (max-width: 480px) {
+  .ai-preset-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ai-preset-pill {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--vng-surface-alt);
+  border: 1px solid var(--vng-border);
+  border-radius: var(--vng-radius-md);
+  cursor: pointer;
+  font-family: var(--vng-font-sans);
+  text-align: left;
+  transition: var(--vng-transition);
+}
+
+.ai-preset-pill:hover {
+  background: #ffffff;
+  border-color: #93c5fd;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.08);
+}
+
+.ai-preset-pill.active {
+  background: #eff6ff;
+  border-color: var(--vng-primary);
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+.ai-preset-pill .preset-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--vng-text-main);
+}
+
+.ai-preset-pill.active .preset-name {
+  color: #1d4ed8;
+}
+
+.preset-type-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: var(--vng-radius-sm);
+  text-transform: uppercase;
+}
+
+.preset-type-badge.https {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.preset-type-badge.local {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+/* Dual-Target Helper Note Callout */
+.ai-dual-target-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: var(--vng-radius-md);
+  margin-top: 8px;
+}
+
+.ai-dual-target-note .note-icon {
+  color: #d97706;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.ai-dual-target-note .note-text {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #92400e;
+}
+
+.ai-dual-target-note .note-text code {
+  background: #fef3c7;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-family: var(--vng-font-mono);
+  font-size: 10px;
+}
+
+/* AI Error Diagnosis Box in Drawer Chat */
+.ai-error-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: var(--vng-radius-md);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.ai-error-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-error-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  background: #dc2626;
+  color: #ffffff;
+  border-radius: var(--vng-radius-sm);
+}
+
+.ai-error-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #991b1b;
+}
+
+.ai-error-desc {
+  font-size: 12px;
+  line-height: 1.5;
+  color: #7f1d1d;
+  margin: 0;
+}
+
+.ai-error-solutions {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: #7f1d1d;
+}
+
+.ai-error-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
