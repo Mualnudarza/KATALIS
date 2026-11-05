@@ -26,8 +26,8 @@ export class AiGateModal {
     const currentKey = currentCreds.apiKey || '';
 
     const modalHtml = `
-      <div class="vng-modal-backdrop active" id="modal-ai-gate-backdrop">
-        <div class="vng-modal-card ai-gate-modal-card" id="modal-ai-gate-card">
+      <div class="vng-modal-backdrop open active" id="modal-ai-gate-backdrop">
+        <div class="vng-modal ai-gate-modal-card" id="modal-ai-gate-card">
           <div class="ai-gate-header">
             <div class="ai-gate-badge">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

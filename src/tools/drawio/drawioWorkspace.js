@@ -167,6 +167,13 @@ export class DrawioWorkspace {
         this.currentDiagramXml = xml;
       }
     });
+
+    // Safety timeout: sembunyikan loading overlay jika postMessage terlambat
+    setTimeout(() => {
+      if (overlay && overlay.style.display !== 'none') {
+        overlay.style.display = 'none';
+      }
+    }, 3500);
   }
 
   /**

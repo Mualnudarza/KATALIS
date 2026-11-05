@@ -307,11 +307,12 @@ function handleDroppedFiles(files) {
 document.body.addEventListener('dragover', fileDrop('Buka diagram BPMN di KATALIS', handleDroppedFiles), false);
 
 // Setup Handler Aksi Vengeance UI & Navigasi
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
   initSupabase();
 
   // 1. Tentukan Tampilan Awal (Default: Portal Hub, kecuali parameter direct)
   if (directDrawio) {
+    switchView('drawio', 'pure-zero');
     openAiGateModal();
   } else if (directTool) {
     switchView('workspace');
@@ -321,7 +322,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 2. Navigasi Router Hub <--> BPMN Workspace <--> Draw.io Studio
   const btnEnterBpmn = document.getElementById('btn-enter-bpmn');
+  const cardToolBpmn = document.getElementById('card-tool-bpmn');
   const btnEnterDrawio = document.getElementById('btn-enter-drawio');
+  const btnEnterDrawioZero = document.getElementById('btn-enter-drawio-zero');
+  const cardToolDrawio = document.getElementById('card-tool-drawio');
   const btnBackHub = document.getElementById('btn-back-hub');
   const drawerNavHub = document.getElementById('drawer-nav-hub');
   const workspaceBrandHome = document.getElementById('workspace-brand-home');
@@ -329,11 +333,39 @@ document.addEventListener('DOMContentLoaded', () => {
   const drawerNavDrawio = document.getElementById('drawer-nav-drawio');
 
   if (btnEnterBpmn) {
-    btnEnterBpmn.addEventListener('click', () => switchView('workspace'));
+    btnEnterBpmn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      switchView('workspace');
+    });
   }
+  if (cardToolBpmn) {
+    cardToolBpmn.addEventListener('click', (e) => {
+      if (e.target.closest('#btn-enter-bpmn')) return;
+      switchView('workspace');
+    });
+  }
+
   if (btnEnterDrawio) {
-    btnEnterDrawio.addEventListener('click', () => openAiGateModal());
+    btnEnterDrawio.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openAiGateModal();
+    });
   }
+
+  if (btnEnterDrawioZero) {
+    btnEnterDrawioZero.addEventListener('click', (e) => {
+      e.stopPropagation();
+      switchView('drawio', 'pure-zero');
+    });
+  }
+
+  if (cardToolDrawio) {
+    cardToolDrawio.addEventListener('click', (e) => {
+      if (e.target.closest('#btn-enter-drawio') || e.target.closest('#btn-enter-drawio-zero')) return;
+      openAiGateModal();
+    });
+  }
+
   if (btnBackHub) {
     btnBackHub.addEventListener('click', () => switchView('hub'));
   }
@@ -784,4 +816,11 @@ document.addEventListener('DOMContentLoaded', () => {
       closeCustomColorModal();
     });
   }
-});
+}
+
+// Eksekusi inisialisasi aplikasi dengan verifikasi status loading dokumen
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
