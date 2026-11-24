@@ -453,12 +453,16 @@ function initApp() {
   if (btnPasteBpmnXml && modalPasteBpmnXml) {
     btnPasteBpmnXml.addEventListener('click', () => {
       modalPasteBpmnXml.classList.add('open');
+      modalPasteBpmnXml.setAttribute('aria-hidden', 'false');
       setTimeout(() => textareaPasteBpmnXml?.focus(), 0);
     });
   }
 
   const closePasteBpmnXmlModal = () => {
-    if (modalPasteBpmnXml) modalPasteBpmnXml.classList.remove('open');
+    if (modalPasteBpmnXml) {
+      modalPasteBpmnXml.classList.remove('open');
+      modalPasteBpmnXml.setAttribute('aria-hidden', 'true');
+    }
     if (pasteBpmnXmlStatus) pasteBpmnXmlStatus.textContent = 'XML akan divalidasi dan dimuat ke kanvas BPMN.';
   };
 
@@ -532,6 +536,7 @@ function initApp() {
       if (/<\s*(?:[\w.-]+:)?definitions\b/i.test(pastedText)) {
         textareaPasteBpmnXml.value = pastedText;
         modalPasteBpmnXml.classList.add('open');
+        modalPasteBpmnXml.setAttribute('aria-hidden', 'false');
         pasteBpmnXmlStatus.textContent = 'XML BPMN terdeteksi. Diagram akan dimuat otomatis...';
         setTimeout(() => btnImportPasteBpmnXml.click(), 0);
       }

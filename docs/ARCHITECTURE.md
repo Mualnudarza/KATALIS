@@ -176,7 +176,8 @@ Alur pemrosesan data ujung-ke-ujung (*end-to-end*):
        │
        ▼
 [3. DrawioWorkspace merender toolbar dan iframe diagrams.net]
-  - DrawioProtocolBridge menginisialisasi komunikasi postMessage
+  - DrawioProtocolBridge menginisialisasi komunikasi postMessage dan mengirim konfigurasi `enableAi: false`, `aiActions: []`
+  - Menu dan tindakan AI bawaan diagrams.net dinonaktifkan pada editor Phase 1
   - Pengguna membuat dan menyunting diagram langsung pada editor Draw.io
   - Tombol Kanvas Baru memuat XML kosong melalui bridge
        │

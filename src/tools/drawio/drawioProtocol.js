@@ -8,6 +8,12 @@ import { BLANK_DRAWIO_XML } from './xmlValidator.js';
 
 export const DRAWIO_EMBED_URL = 'https://embed.diagrams.net/?embed=1&proto=json&configure=1&ui=min&libraries=1';
 
+// Disable diagrams.net's own AI actions in the embedded Phase 1 editor.
+export const DRAWIO_EMBED_CONFIG = {
+  enableAi: false,
+  aiActions: []
+};
+
 export class DrawioProtocolBridge {
   constructor(iframeElement, options = {}) {
     this.iframe = iframeElement;
@@ -53,6 +59,7 @@ export class DrawioProtocolBridge {
       case 'configure':
         this.sendAction('configure', {
           config: {
+            ...DRAWIO_EMBED_CONFIG,
             css: 'body { background-color: #F8FAFC !important; }',
             defaultVertexStyle: {
               rounded: '1',

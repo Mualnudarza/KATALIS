@@ -533,11 +533,14 @@
          MODALS
          ====================================================================== -->
 
-    <!-- Modal Tempel XML BPMN -->
-    <div class="vng-modal-backdrop" id="modal-paste-bpmn-xml">
+  </div>
+
+  <!-- Modals live outside the clipped workspace views so fixed backdrops can cover the page. -->
+  <!-- Modal Tempel XML BPMN -->
+  <div class="vng-modal-backdrop" id="modal-paste-bpmn-xml" role="dialog" aria-modal="true" aria-labelledby="paste-bpmn-xml-title" aria-hidden="true">
       <div class="vng-modal">
         <div class="vng-modal-header">
-          <div class="vng-modal-title">
+          <div class="vng-modal-title" id="paste-bpmn-xml-title">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2"/>
               <rect x="9" y="2" width="6" height="4" rx="1"/>
@@ -775,8 +778,6 @@
         </div>
       </div>
     </div>
-
-  </div>
 
   <!-- KATALIS Application Bundle -->
   <script src="./dist/katalis.bundle.js"></script>

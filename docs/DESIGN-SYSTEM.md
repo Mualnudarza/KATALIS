@@ -109,6 +109,7 @@ Dilarang menggunakan nilai warna arbitrer di luar tabel heksadesimal resmi berik
 ### F. Draw.io Studio Manual (Phase 1)
 - Toolbar workspace memuat navigasi kembali ke Portal Hub, nama editor, dan aksi "Kanvas Baru".
 - Iframe diagrams.net menggunakan area kanvas utama yang responsif.
+- Konfigurasi embed menonaktifkan fitur AI bawaan diagrams.net (`enableAi: false`, `aiActions: []`).
 - Tidak ada modal AI, input model, endpoint, atau API key pada antarmuka Phase 1.
 - Integrasi AI ditahan untuk Phase 2.
 
