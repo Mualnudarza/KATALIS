@@ -36,7 +36,6 @@ import {
 } from './supabase';
 
 import { DrawioWorkspace } from './tools/drawio/drawioWorkspace';
-import { AiGateModal } from './tools/drawio/aiGateModal';
 
 // State global aplikasi
 let currentFileName = 'katalis-diagram.bpmn';
@@ -225,21 +224,8 @@ eventBus.on('tokenSimulation.toggleMode', (event) => {
   }
 });
 
-// Fungsi Buka Modal Ephemeral AI Gate
-export function openAiGateModal() {
-  const modal = new AiGateModal({
-    onSuccess: (mode) => {
-      switchView('drawio', mode);
-    },
-    onSkip: (mode) => {
-      switchView('drawio', mode);
-    }
-  });
-  modal.open();
-}
-
 // Fungsi Switch View (Hub <--> BPMN Workspace <--> Draw.io Studio)
-export function switchView(targetView, initialMode = 'pure-zero') {
+export function switchView(targetView) {
   currentView = targetView;
   const viewHub = document.getElementById('view-hub');
   const viewWorkspace = document.getElementById('view-tool-workspace');
@@ -264,12 +250,9 @@ export function switchView(targetView, initialMode = 'pure-zero') {
       viewDrawio.classList.add('active');
       if (!drawioWorkspaceInstance) {
         drawioWorkspaceInstance = new DrawioWorkspace({
-          onNavigateHub: () => switchView('hub'),
-          onRequestAiGate: () => openAiGateModal()
+          onNavigateHub: () => switchView('hub')
         });
-        drawioWorkspaceInstance.mount(viewDrawio, initialMode);
-      } else {
-        drawioWorkspaceInstance.setMode(initialMode);
+        drawioWorkspaceInstance.mount(viewDrawio);
       }
     }
   } else {
@@ -312,8 +295,7 @@ function initApp() {
 
   // 1. Tentukan Tampilan Awal (Default: Portal Hub, kecuali parameter direct)
   if (directDrawio) {
-    switchView('drawio', 'pure-zero');
-    openAiGateModal();
+    switchView('drawio');
   } else if (directTool) {
     switchView('workspace');
   } else {
@@ -324,7 +306,6 @@ function initApp() {
   const btnEnterBpmn = document.getElementById('btn-enter-bpmn');
   const cardToolBpmn = document.getElementById('card-tool-bpmn');
   const btnEnterDrawio = document.getElementById('btn-enter-drawio');
-  const btnEnterDrawioZero = document.getElementById('btn-enter-drawio-zero');
   const cardToolDrawio = document.getElementById('card-tool-drawio');
   const btnBackHub = document.getElementById('btn-back-hub');
   const drawerNavHub = document.getElementById('drawer-nav-hub');
@@ -348,21 +329,14 @@ function initApp() {
   if (btnEnterDrawio) {
     btnEnterDrawio.addEventListener('click', (e) => {
       e.stopPropagation();
-      openAiGateModal();
-    });
-  }
-
-  if (btnEnterDrawioZero) {
-    btnEnterDrawioZero.addEventListener('click', (e) => {
-      e.stopPropagation();
-      switchView('drawio', 'pure-zero');
+      switchView('drawio');
     });
   }
 
   if (cardToolDrawio) {
     cardToolDrawio.addEventListener('click', (e) => {
-      if (e.target.closest('#btn-enter-drawio') || e.target.closest('#btn-enter-drawio-zero')) return;
-      openAiGateModal();
+      if (e.target.closest('#btn-enter-drawio')) return;
+      switchView('drawio');
     });
   }
 
@@ -379,7 +353,7 @@ function initApp() {
     drawerNavBpmn.addEventListener('click', () => switchView('workspace'));
   }
   if (drawerNavDrawio) {
-    drawerNavDrawio.addEventListener('click', () => openAiGateModal());
+    drawerNavDrawio.addEventListener('click', () => switchView('drawio'));
   }
 
   // 3. Sidebar Drawer Toggle

@@ -107,7 +107,7 @@
             </div>
           </div>
 
-          <!-- Card 2: Active Tool (Draw.io Studio - Dual-Mode: AI & Pure Zero) -->
+          <!-- Card 2: Active Tool (Draw.io Studio) -->
           <div class="hub-card active-card" id="card-tool-drawio">
             <div class="hub-card-header">
               <div class="hub-card-icon" style="color: #2563eb; background: #eff6ff;">
@@ -119,17 +119,11 @@
               </div>
               <span class="hub-card-badge badge-active">Siap Digunakan</span>
             </div>
-            <div class="hub-card-title">Draw.io Studio (Dual-Mode)</div>
+            <div class="hub-card-title">Draw.io Studio</div>
             <div class="hub-card-desc">
-              Perancangan diagram arsitektur sistem, cloud topology, dan flowchart dengan pilihan asisten AI generatif (OpenAI/9Router-compatible) atau kanvas manual murni dari nol.
+              Editor diagram umum untuk merancang flowchart, arsitektur sistem, cloud topology, dan diagram lainnya secara manual.
             </div>
             <div class="hub-card-features">
-              <div>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polyline points="20 6 9 17 4 12"/>
-                </svg>
-                Asisten AI generatif via gateway 9Router/OpenAI
-              </div>
               <div>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="20 6 9 17 4 12"/>
@@ -140,15 +134,18 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="20 6 9 17 4 12"/>
                 </svg>
-                Keamanan sesi sementara (Zero-Retention Ephemeral)
+                Penyuntingan diagram manual dengan fitur ekspor Draw.io
+              </div>
+              <div>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Terhubung ke editor diagrams.net
               </div>
             </div>
-            <div class="hub-card-action" style="display: flex; gap: 8px;">
-              <button class="vng-btn vng-btn-primary hub-card-btn" id="btn-enter-drawio" style="flex: 1;" title="Buka dengan Asisten AI (Gerbang Kredensial Ephemeral)">
-                Buka dengan AI
-              </button>
-              <button class="vng-btn vng-btn-secondary hub-card-btn" id="btn-enter-drawio-zero" style="flex: 1;" title="Buka kanvas Draw.io langsung tanpa AI">
-                Bangun Dari Nol
+            <div class="hub-card-action">
+              <button class="vng-btn vng-btn-primary hub-card-btn" id="btn-enter-drawio" title="Buka editor diagram Draw.io">
+                Buka Draw.io Studio
               </button>
             </div>
           </div>
@@ -515,7 +512,7 @@
 
 
     <!-- ======================================================================
-         VIEW 3: DRAW.IO STUDIO WORKSPACE (Dual-Mode: AI & Pure Zero)
+         VIEW 3: DRAW.IO STUDIO WORKSPACE (Manual Editor)
          ====================================================================== -->
     <div class="katalis-view" id="view-drawio-workspace">
       <!-- Diisi secara dinamis oleh DrawioWorkspace.mount() -->

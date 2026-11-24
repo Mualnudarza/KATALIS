@@ -2,8 +2,8 @@
 
 Dokumen Penanggung Jawab: PEREKAYASA (Direktorat II: Teknologi & Rekayasa)
 Target Pembaca AI: Claude Code, Cursor, Codex, dan seluruh instans agen koding.
-Status: Terverifikasi (Hasil Wawancara Frontier GRILL-ME & Kurasi Fase 1.1)
-Versi Arsitektur: 1.1.0
+Status: Terverifikasi (Phase 1 — Draw.io Manual; integrasi AI ditahan untuk Phase 2)
+Versi Arsitektur: 1.1.1
 
 ---
 
@@ -20,36 +20,34 @@ Topologi arsitektur sistem KATALIS:
 |  [ LAYER 1: PORTAL SHELL & ROUTER CONTROLLER ]                                                     |
 |  +----------------------------------------------------------------------------------------------+  |
 |  | - View Switcher: Portal Hub View <---> BPMN Workspace <---> Draw.io Studio Workspace         |  |
-|  | - Top Spotlight Navbar (Brand, Mode Terang, Quick Actions, Status Lencana Koneksi AI)        |  |
+|  | - Top Spotlight Navbar (Brand, Mode Terang, Quick Actions)                                    |  |
 |  | - Sidebar Tab Navigation (Drawer untuk navigasi antar-alat dan kembali ke Hub)              |  |
 |  +----------------------------------------------------------------------------------------------+  |
 |                                                │                                                   |
 |         ┌──────────────────────────────────────┼──────────────────────────────────────┐            |
 |         ▼                                      ▼                                      ▼            |
 |  [ LAYER 2A: PORTAL HUB ]            [ LAYER 2B: BPMN WORKSPACE ]        [ LAYER 2C: DRAW.IO STUDIO]
-|  - Bento Grid Catalog                - Full-Screen bpmn-js Canvas        - Dual-Mode Switcher      |
-|  - Active: BPMN Simulator            - Custom Properties Panel           - Ephemeral AI Gate Modal |
-|  - Active: Draw.io Studio            - Color Picker (OMG in Color)       - Embedded Draw.io Iframe |
-|  - Roadmap: SLA, Audit               - Floating Glass Dock               - AI Assistant Drawer     |
+|  - Bento Grid Catalog                - Full-Screen bpmn-js Canvas        - Manual Diagram Editor  |
+|  - Active: BPMN Simulator            - Custom Properties Panel           - Embedded Draw.io Iframe |
+|  - Active: Draw.io Studio            - Color Picker (OMG in Color)       - diagrams.net postMessage|
+|  - Roadmap: SLA, Audit               - Floating Glass Dock               - AI deferred to Phase 2  |
 |                                                        │                              │            |
 |                                                        ▼                              ▼            |
-|                                        [ LAYER 3A: TOKEN SIMULATION ]    [ LAYER 3B: AI DIAGRAM    |
-|                                        - Semantic Evaluator (XOR/AND)      ENGINE & PROTOCOL]      |
-|                                        - Token Lifecycle (Gen/Sink)      - OpenAI-Compatible REST  |
-|                                        - Realtime SVG Animation Tracing    Streaming Client        |
-|                                                        │                 - 9Router Gateway Driver  |
-|                                                        │                 - XML Validator & Auto-Fix|
-|                                                        │                 - postMessage Bridge      |
+|                                        [ LAYER 3A: TOKEN SIMULATION ]    [ LAYER 3B: DRAW.IO      |
+|                                        - Semantic Evaluator (XOR/AND)      EMBED PROTOCOL]        |
+|                                        - Token Lifecycle (Gen/Sink)      - postMessage Bridge      |
+|                                        - Realtime SVG Animation Tracing    - Native Draw.io editor  |
 |                                                        │                              │            |
 |                                        ┌───────────────┴──────────────────────────────┘            |
 |                                        ▼                                                           |
-|  [ LAYER 4: DUAL PERSISTENCE & EPHEMERAL CREDENTIAL LAYER ]                                        |
+|  [ LAYER 4: LOCAL PERSISTENCE & FILE EXPORT ]                                                       |
 |  +----------------------------------------------------------------------------------------------+  |
 |  | - Permanent Client Store: Browser LocalStorage (Diagram BPMN & Konfigurasi UI)               |  |
-|  | - Ephemeral Session Store: Browser SessionStorage / In-Memory (Endpoint & API Key AI Hilang) |  |
-|  | - Fallback/File: Native XML BPMN / Draw.io XML Export & High-Res PNG / SVG Exporter          |  |
+|  | - File: Native XML BPMN / Draw.io XML Export & High-Res PNG / SVG Exporter                   |  |
 |  | - Optional Cloud DB: Supabase REST Client Adapter (Deferred)                                 |  |
-|  +----------------------------------------------------------------------------------------------+  |
+|  +----------------------------------------------------------------------------------------------+  | 
+|  | - AI Integration: Not part of Phase 1 runtime; deferred for Phase 2 evaluation               |  |
+|  +----------------------------------------------------------------------------------------------+  | 
 +----------------------------------------------------------------------------------------------------+
                                                  │
                                                  ▼ (Static Assets Build & Hosting)
@@ -76,10 +74,8 @@ Daftar dependensi dan teknologi resmi yang terotorisasi untuk KATALIS:
 | Properties Panel | @bpmn-io/properties-panel | ^3.47.0 | Panel konfigurasi atribut teknis elemen proses BPMN |
 | General Diagramming | Draw.io Embedded Protocol | embed.diagrams.net (v24+) | Diagramming serbaguna kelas dunia, zero-bundle bloat di GitHub Pages |
 | Iframe Communication | HTML5 postMessage API | W3C Standard | Protokol pertukaran pesan JSON aman antara KATALIS dan Draw.io |
-| AI Integration Driver | OpenAI-Compatible REST SSE | Fetch Streams API | Terkoneksi mulus ke 9Router (port 20128), DeepSeek, Ollama, OpenRouter |
 | Styling & Theme | Vanilla CSS (Vengeance UI Light) | Custom Design Tokens | Efek glass blur, spotlight, dock melayang, mode terang |
 | Local Persistence | Browser LocalStorage API | Native Web API | Bebas ketergantungan jaringan untuk diagram BPMN (100% offline) |
-| Ephemeral Security | Browser SessionStorage API | In-Memory Session | Kredensial AI (Endpoint, API Key) musnah otomatis saat sesi berakhir |
 | Optional Cloud DB | @supabase/supabase-js | ^2.49.0 | Persistensi awan opsional (hanya jika diaktifkan pengguna) |
 
 ---
@@ -115,12 +111,11 @@ KATALIS/
 │   │   ├── bpmn/                 # Ruang kerja modul BPMN & Token Simulation
 │   │   │   ├── bpmnWorkspace.js  # Inisialisasi modeler, event canvas, dan dock
 │   │   │   └── navigation.js     # Sidebar tab navigasi kembali ke hub
-│   │   └── drawio/               # Ruang kerja modul Draw.io Studio (Dual-Mode)
-│   │       ├── drawioWorkspace.js# Pengendali ruang kerja, tata letak split-view, & iframe
+│   │   └── drawio/               # Ruang kerja Draw.io Studio manual (Phase 1)
+│   │       ├── drawioWorkspace.js# Pengendali ruang kerja manual dan iframe
 │   │       ├── drawioProtocol.js # Driver komunikasi postMessage (init, load, export, save)
-│   │       ├── aiGateModal.js    # Modal dialog kredensial sesi sementara (Ephemeral AI Gate)
-│   │       ├── aiClient.js       # Client REST streaming OpenAI-compatible (9Router / BYOK)
-│   │       └── xmlValidator.js   # Parser & pembersih tag mxCell XML hasil generasi AI
+│   │       └── xmlValidator.js   # Konstanta XML kanvas kosong
+│   │       # aiClient.js dan aiGateModal.js tersisa sebagai kode Phase 2, tidak diimpor.
 │   ├── supabase.js               # Klien adaptor Supabase (opsional)
 │   └── templates/                # Pustaka template proses bisnis bawaan
 │       └── templates.js          # Definisi XML BPMN (Uji Eksekusi, Closing Customer, Kanvas Bersih)
@@ -168,43 +163,28 @@ Alur pemrosesan data ujung-ke-ujung (*end-to-end*):
   - State diagram tetap tersimpan di penyimpanan browser lokal
 ```
 
-### B. Alur Kerja Modul Draw.io Studio (Dual-Mode & Ephemeral AI Gate)
+### B. Alur Kerja Modul Draw.io Studio (Phase 1 — Manual)
 ```text
-[1. Pemilihan Instrumen Draw.io Studio dari Portal Hub]
+[1. Pemilihan Draw.io Studio dari Portal Hub]
        │
        ▼
-[2. Pemicuan Ephemeral AI Gate Modal]
+[2. Shell memuat ruang kerja Draw.io manual]
+  - Tidak ada modal AI, pemilihan model, input API key, atau panggilan layanan AI
        │
-       ├──────────────────────────────────────────┐
-       │ (Opsi: Bangun Dari Nol / Lewati)         │ (Opsi: Isi Endpoint & Kunci API)
-       ▼                                          ▼
-[3A. Mode 1: Pure Zero Manual]             [3B. Mode 2: AI-Assisted Generative]
-  - Kredensial AI dikosongkan                - Endpoint (misal http://localhost:20128/v1) & Key
-  - AI Assistant Drawer dinonaktifkan          disimpan di SessionStorage (hilang saat tab tutup)
-  - Iframe Draw.io mengambil layar penuh     - Antarmuka Split-View: AI Drawer (kiri) & Kanvas (kanan)
-  - Pengguna mendesain diagram manual        - Pengguna mengirimkan prompt perintah bahasa alami
-       │                                          │
-       │                                          ▼
-       │                                   [4. AI Streaming & Protocol Bridge]
-       │                                     - aiClient mengirim pesan ke 9Router / LLM Provider
-       │                                     - Respons streaming mxCell XML diproses real-time
-       │                                     - xmlValidator membungkus mxCell ke mxGraphModel
-       │                                     - drawioProtocol mengirim { action: 'load', xml }
-       │                                       ke iframe Draw.io via window.postMessage
-       │                                          │
-       │                                          ▼
-       │                                   [5. Sinkronisasi Dua Arah]
-       │                                     - Pengguna menyunting manual di atas kanvas Draw.io
-       │                                     - AI Drawer meminta diagram terkini ({ action: 'export' })
-       │                                     - XML terbaru diumpankan balik sebagai konteks iterasi
-       │                                          │
-       └──────────────────┬───────────────────────┘
-                          │
-                          ▼
-[6. Ekspor & Penutupan Sesi]
-  - Ekspor langsung dari Draw.io ke format .drawio, .xml, .svg, atau .png
-  - Menutup peramban menghapus seluruh API Key dari memori tanpa sisa jejak
+       ▼
+[3. DrawioWorkspace merender toolbar dan iframe diagrams.net]
+  - DrawioProtocolBridge menginisialisasi komunikasi postMessage
+  - Pengguna membuat dan menyunting diagram langsung pada editor Draw.io
+  - Tombol Kanvas Baru memuat XML kosong melalui bridge
+       │
+       ▼
+[4. Simpan, ekspor, dan navigasi]
+  - Pengguna memakai kemampuan bawaan diagrams.net untuk menyimpan/mengekspor
+  - Pengguna dapat kembali ke Portal Hub dari toolbar
+  - Iframe embed memerlukan koneksi internet ke diagrams.net
 ```
+
+Integrasi model AI Draw.io dan pengelolaan kredensial tidak dimuat ke runtime Phase 1; evaluasi fitur tersebut ditahan untuk Phase 2.
 
 ---
 
@@ -218,10 +198,7 @@ Arsitektur KATALIS dirancang agar modular untuk penambahan alat/instrumen sistem
    - `unmount()`: Membersihkan memory leak, event listener window, timer, dan DOM saat pengguna kembali ke Hub.
 3. **Isolasi Penyimpanan & Keamanan Data**:
    - Data diagram permanen menggunakan namespace unik (misal: `katalis_bpmn_state`).
-   - Data kredensial sensitif wajib menggunakan `sessionStorage` atau *in-memory runtime state* dengan mekanisme pembersihan otomatis (*auto-purge*) saat sesi berakhir.
-4. **Strategi Integrasi AI Dual-Target (Lokal vs Cloud HTTPS)**:
-   - *GitHub Pages (`https:`)*: Disediakan preset cerdas untuk penyedia gateway HTTPS (OpenRouter, Groq, DeepSeek) guna memastikan enkripsi end-to-end tanpa terbentur kebijakan W3C Active Mixed Content.
-   - *Lingkungan Lokal (`http://localhost`)*: Mendukung penuh koneksi langsung tanpa hambatan ke 9Router lokal di port 20128.
-   - Modal onboarding dilengkapi pendeteksi lingkungan otomatis dan tombol pill pemilihan preset instan.
+   - Data kredensial sensitif hanya boleh diperkenalkan jika fitur terkait disetujui dan diimplementasikan pada fase mendatang.
+4. **Penundaan Integrasi AI Draw.io**: AI generatif dan pengelolaan kredensial tidak menjadi bagian runtime Phase 1; fitur tersebut ditahan untuk evaluasi Phase 2.
 5. **Strategi Iframe Tersemat Resmi untuk GitHub Pages**:
    - Menghindari pemaketan repositori monolitik berat. Menggunakan URL embed resmi yang dikendalikan oleh protokol postMessage JSON standar industri.

@@ -11,7 +11,7 @@ Versi: 1.1.0
 - **Product Name:** KATALIS
 - **Kepanjangan:** Kumpulan Alat, Template, Analisis, dan Instrumen Sistematis
 - **Tagline:** Portal terpadu instrumen dan alat analisis proses bisnis berbasis peramban web statis.
-- **Description:** KATALIS adalah portal web multifungsi yang menyediakan katalog perkakas (*tools*), instrumen analisis, dan pustaka template operasional. Pada rilis Versi 1.1, KATALIS menyajikan dua modul instrumen utama: (1) Pemodelan proses bisnis BPMN 2.0 standar internasional OMG dengan mesin simulasi token interaktif (*token simulation*), serta (2) Draw.io Studio dengan kemampuan Dual-Mode (pembuatan diagram berbasis instruksi AI generatif via gateway OpenAI-compatible / 9Router dan pembuatan diagram manual murni dari nol / *Pure Zero Build*). Seluruh sistem beroperasi 100% pada peramban web tanpa kewajiban server runtime backend khusus.
+- **Description:** KATALIS adalah portal web multifungsi yang menyediakan katalog perkakas (*tools*), instrumen analisis, dan pustaka template operasional. Pada rilis Versi 1.1, KATALIS menyajikan dua modul instrumen utama: (1) Pemodelan proses bisnis BPMN 2.0 standar internasional OMG dengan mesin simulasi token interaktif (*token simulation*), serta (2) Draw.io Studio sebagai editor diagram umum untuk penyuntingan manual melalui editor diagrams.net tersemat. Fitur AI generatif Draw.io ditahan dan tidak termasuk dalam rilis ini; evaluasinya direncanakan untuk Phase 2. Sistem berjalan di peramban tanpa kewajiban server runtime backend khusus.
 
 ---
 
@@ -43,7 +43,7 @@ Fitur wajib yang harus diselesaikan untuk platform KATALIS sesuai hasil wawancar
 1. **Portal Shell Hub (Beranda Utama)**:
    - Tampilan pembuka bergaya katalog Bento Grid yang memuat daftar instrumen sistematis KATALIS.
    - Kartu aktif untuk meluncurkan modul *BPMN Modeler & Token Simulator*.
-   - Kartu aktif untuk meluncurkan modul baru *Draw.io Studio (Dual-Mode: AI & Pure Zero)*.
+   - Kartu aktif untuk meluncurkan modul *Draw.io Studio* sebagai editor diagram manual umum; tidak ada fitur AI pada Phase 1.
    - Kartu rencana masa depan berlabel "Segera Hadir" (*Roadmap Cards*) untuk instrumen analisis lainnya (SLA Analyzer, Compliance Audit).
 2. **BPMN 2.0 Modeler Workspace**:
    - Kanvas visual standar OMG BPMN 2.0 berbasis `bpmn-js`.
@@ -54,22 +54,12 @@ Fitur wajib yang harus diselesaikan untuk platform KATALIS sesuai hasil wawancar
    - Mesin eksekusi token dinamis berbasis `bpmn-js-token-simulation`.
    - Visualisasi pergerakan token pada Sequence Flow, percabangan Exclusive Gateway (XOR), pemisahan/penyatuan Parallel Gateway (AND), dan penanganan Timer/Message Events.
    - Kontrol pemutaran simulasi melalui Floating Glass Dock: Putar/Jeda (*Play/Pause*), Langkah Maju (*Step-by-Step*), dan Reset Simulasi.
-4. **Draw.io Studio (Dual-Mode: AI-Assisted & Pure Zero Build)**:
-   - **Gerbang Kredensial AI Sesi Sementara (Ephemeral AI Gate)**:
-     - Dialog penentu mode saat memasuki instrumen Draw.io Studio.
-     - Menyediakan input konfigurasi Endpoint AI (default acuan: `http://localhost:20128/v1` untuk 9Router), API Key/Token, dan Model ID pilihan.
-     - Keamanan Sesi Ephemeral: Kredensial hanya disimpan di dalam memori aktif sesi peramban (`sessionStorage` atau in-memory state) dan otomatis terhapus tanpa sisa saat tab atau sesi peramban ditutup.
-     - Opsi Lewati / Bangun Dari Nol (*Skip / Pure Build from Zero*): Pengguna dapat melewati pengisian kredensial untuk langsung menggunakan kanvas manual murni.
-   - **Mode 1: Pure Zero Build (Manual 100%)**:
-     - Menampilkan kanvas editor Draw.io tersemat (*embedded iframe*) secara layar penuh tanpa panel AI.
-     - Akses lengkap ke seluruh stensil bentuk dasar, flowchart, UML, arsitektur cloud, dan konektor.
-     - Penyimpanan diagram lokal dan ekspor mandiri ke format `.drawio`, `.xml`, `.png`, dan `.svg`.
-   - **Mode 2: AI-Assisted Generative Mode**:
-     - Antarmuka Split-View Vengeance UI: AI Chat Drawer di sisi samping dan kanvas Draw.io di sisi utama.
-     - Input perintah bahasa alami (*prompt*) untuk membuat diagram baru (arsitektur microservices, ERD, topologi cloud, flowchart logika) atau memperbarui diagram aktif.
-     - Integrasi Gateway OpenAI-Compatible (kompatibel langsung dengan 9Router, DeepSeek, OpenRouter, Groq, OpenAI, Ollama).
-     - Streaming XML Parser & Auto-Repair: AI hanya menghasilkan tag `mxCell` terstruktur yang divalidasi dan diinjeksikan secara real-time ke editor Draw.io via protokol `window.postMessage`.
-     - Sinkronisasi Dua Arah: Perubahan manual di kanvas dapat diekspor balik sebagai konteks XML bagi AI untuk iterasi perintah berikutnya.
+4. **Draw.io Studio (Phase 1 — Editor Manual)**:
+   - Membuka editor diagrams.net resmi melalui embedded iframe tanpa modal AI, pengaturan model, kredensial, atau pemanggilan layanan AI.
+   - Menyediakan akses ke stensil bentuk, flowchart, UML, arsitektur cloud, dan konektor Draw.io.
+   - Pengguna dapat membuat, mengedit, dan mengekspor diagram melalui kemampuan bawaan editor Draw.io.
+   - Editor tersemat memerlukan koneksi internet ke layanan diagrams.net; fitur ini tidak menjanjikan operasi offline penuh.
+   - **Phase 2 (ditahan):** Integrasi AI generatif, prompt bahasa alami, pengelolaan kredensial, dan sinkronisasi diagram dengan AI tidak termasuk implementasi Phase 1 dan tidak boleh aktif di runtime.
 5. **Sidebar Tab Navigasi Antar-Alat**:
    - Saat pengguna berada di dalam ruang kerja alat (BPMN Workspace atau Draw.io Studio), bilah navigasi samping (*sidebar drawer*) tersedia untuk kembali ke Beranda Portal Hub atau beralih instrumen secara instan.
 6. **Pustaka Template Terverifikasi**:
@@ -86,7 +76,7 @@ Fitur wajib yang harus diselesaikan untuk platform KATALIS sesuai hasil wawancar
 ## 06 Out of Scope (For Now)
 Komponen yang secara sadar DITOLAK pada Versi 1 & 1.1 untuk mencegah overengineering:
 - **Autentikasi Pengguna Wajib**: Tidak ada sistem registrasi akun pengguna, password login terpusat, atau database akun pengguna.
-- **Penyimpanan Kredensial AI Permanen di Server**: KATALIS tidak menyediakan database backend untuk menyimpan API Key pengguna. Seluruh kredensial AI berumur pendek (*ephemeral*) dan dikelola murni di sisi peramban klien (*Bring Your Own Key*).
+- **Integrasi AI Draw.io pada Phase 1**: Tidak ada pemanggilan model AI, input API key, atau penyimpanan kredensial AI di rilis ini. Integrasi AI dapat dipertimbangkan kembali pada Phase 2 setelah ditinjau dan disetujui.
 - **Hosting Mandiri Seluruh Berkas Draw.io (Self-Bundle Bloat)**: Tidak mengklon seluruh repositori sumber statis Draw.io (>150 MB) ke dalam repositori KATALIS; integrasi menggunakan standar resmi Iframe Embed Protocol (`embed.diagrams.net`) yang efisien untuk GitHub Pages.
 - **Koneksi Database Cloud Wajib**: Tidak mewajibkan konfigurasi Supabase saat instalasi awal. Seluruh alur data primer beroperasi pada penyimpanan peramban lokal.
 - **Mesin Analitik Durasi SLA Kompleks**: Perhitungan waktu siklus (Cycle Time), biaya per aktivitas, dan simulasi Monte Carlo ditunda ke rilis berikutnya.
@@ -97,19 +87,18 @@ Komponen yang secara sadar DITOLAK pada Versi 1 & 1.1 untuk mencegah overenginee
 ## 07 Success Metrics
 1. **Kecepatan Akses**: Aplikasi dan kanvas siap digunakan di GitHub Pages dalam waktu kurang dari 2 detik saat pemuatan pertama.
 2. **Kemandirian Offline 100% pada Mode Manual**: Mode pemodelan BPMN dan mode Draw.io manual berfungsi lancar dengan penyimpanan lokal peramban.
-3. **Keamanan Kredensial Mutlak**: Tidak ada kebocoran kunci API atau endpoint ke storage persisten permanen; kunci musnah saat sesi peramban ditutup.
-4. **Kompatibilitas Gateway AI**: Driver AI KATALIS berhasil terhubung dan bertukar pesan streaming dengan 9Router lokal (`localhost:20128/v1`) maupun endpoint publik OpenAI-compatible.
-5. **Integritas Ekspor Standar**: Berkas XML BPMN dan XML Draw.io yang diekspor lolos validasi impor di alat standar industri tanpa galat skema.
-6. **Nol Galat Konsol**: Tidak terdapat galat runtime yang tidak tertangani pada konsol peramban saat menjalankan pemodelan maupun orkestrasi iframe.
+3. **Tidak Ada Fitur AI Draw.io di Phase 1**: Runtime tidak meminta kredensial, memanggil model AI, atau mengirim diagram ke layanan AI.
+4. **Ketersediaan Editor Draw.io**: Editor diagrams.net dapat dibuka dan digunakan saat peramban memiliki koneksi ke layanan embed diagrams.net.
+5. **Integritas Ekspor Standar**: Berkas XML BPMN dan diagram Draw.io yang diekspor dapat digunakan kembali pada alat standar terkait.
+6. **Nol Galat Konsol**: Tidak terdapat galat runtime yang tidak tertangani saat menjalankan pemodelan maupun orkestrasi iframe.
 
 ---
 
 ## 08 Acceptance Criteria
 - Pengguna dapat membuka halaman utama portal, melihat katalog alat Bento Grid, dan memilih antara kartu BPMN Modeler atau Draw.io Studio.
-- Saat memilih Draw.io Studio, pengguna disuguhkan modal Ephemeral AI Gate dengan pilihan mengisi endpoint & API key atau memilih "Bangun Dari Nol".
-- Jika pengguna memilih "Bangun Dari Nol", kanvas Draw.io terbuka bersih secara penuh tanpa gangguan panel AI.
-- Jika pengguna mengisi kredensial dan memilih "Aktifkan Mode AI", ruang kerja menampilkan split-view: drawer asisten AI di samping kanvas Draw.io.
-- Perintah teks pada drawer AI berhasil menghasilkan elemen diagram yang langsung ter-render di atas kanvas Draw.io melalui `postMessage`.
-- Menutup tab peramban menghapus seluruh data kredensial AI yang diinputkan.
+- Saat memilih Draw.io Studio, editor diagrams.net terbuka langsung tanpa modal atau opsi AI.
+- Pengguna dapat mengedit diagram menggunakan fitur bawaan Draw.io dan kembali ke Portal Hub.
+- Phase 1 tidak meminta, menyimpan, atau menggunakan API key maupun kredensial AI.
+- Fitur AI Draw.io ditandai sebagai ditahan untuk Phase 2 dan tidak hadir dalam runtime aktif.
 - Sidebar tab navigasi memungkinkan pengguna berpindah antara Beranda Portal Hub, BPMN Modeler, dan Draw.io Studio secara mulus.
 - Teks antarmuka, tombol, formulir, dan seluruh elemen bebas dari karakter emoji.
