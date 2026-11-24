@@ -68,7 +68,7 @@ Fitur wajib yang harus diselesaikan untuk platform KATALIS sesuai hasil wawancar
    - Template BPMN 3: Kanvas Bersih untuk perancangan diagram baru dari awal.
 7. **Penyimpanan Lokal Murni (Local-First Offline)**:
    - Penyimpanan otomatis diagram aktif ke `localStorage` peramban tanpa memerlukan koneksi jaringan internet atau autentikasi akun.
-   - Kemampuan Impor file diagram dari komputer lokal (drag-and-drop atau tombol berkas).
+   - Kemampuan Impor file diagram dari komputer lokal (drag-and-drop atau tombol berkas), serta menempelkan XML BPMN langsung ke editor.
    - Kemampuan Ekspor diagram ke format XML, SVG vektor, dan gambar raster PNG 2x Retina.
 
 ---
@@ -100,5 +100,6 @@ Komponen yang secara sadar DITOLAK pada Versi 1 & 1.1 untuk mencegah overenginee
 - Pengguna dapat mengedit diagram menggunakan fitur bawaan Draw.io dan kembali ke Portal Hub.
 - Phase 1 tidak meminta, menyimpan, atau menggunakan API key maupun kredensial AI.
 - Fitur AI Draw.io ditandai sebagai ditahan untuk Phase 2 dan tidak hadir dalam runtime aktif.
+- Pengguna dapat memasukkan XML BPMN dengan cara tempel langsung atau melalui dialog tempel XML; XML ditolak dengan pesan yang jelas jika bukan XML BPMN valid.
 - Sidebar tab navigasi memungkinkan pengguna berpindah antara Beranda Portal Hub, BPMN Modeler, dan Draw.io Studio secara mulus.
 - Teks antarmuka, tombol, formulir, dan seluruh elemen bebas dari karakter emoji.

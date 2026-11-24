@@ -179,7 +179,8 @@ export function exportDiagramAsPng(svgString, fileName) {
 }
 
 // Helper: Buka diagram XML
-export function openDiagram(xmlString) {
+export function openDiagram(xmlString, options = {}) {
+  const { showErrors = true } = options;
   return modeler.importXML(xmlString)
     .then(({ warnings }) => {
       if (warnings && warnings.length) {
@@ -196,12 +197,15 @@ export function openDiagram(xmlString) {
           updateDynamicGrid();
         } catch (e) {}
       }, 50);
+      return true;
     })
     .catch(err => {
       console.error('Gagal memuat XML BPMN:', err);
-      alert('Gagal memuat diagram BPMN: ' + err.message);
+      if (showErrors) alert('Gagal memuat diagram BPMN: ' + err.message);
+      return false;
     });
 }
+
 
 // Inisialisasi Event Bus & Token Simulation
 const eventBus = modeler.get('eventBus');
@@ -435,6 +439,106 @@ function initApp() {
   if (btnOpenFile) {
     btnOpenFile.addEventListener('click', () => {
       fileOpen().then(handleDroppedFiles);
+    });
+  }
+
+  const btnPasteBpmnXml = document.getElementById('btn-paste-bpmn-xml');
+  const modalPasteBpmnXml = document.getElementById('modal-paste-bpmn-xml');
+  const btnClosePasteBpmnXml = document.getElementById('btn-close-paste-bpmn-xml');
+  const btnCancelPasteBpmnXml = document.getElementById('btn-cancel-paste-bpmn-xml');
+  const btnImportPasteBpmnXml = document.getElementById('btn-import-paste-bpmn-xml');
+  const textareaPasteBpmnXml = document.getElementById('textarea-paste-bpmn-xml');
+  const pasteBpmnXmlStatus = document.getElementById('paste-bpmn-xml-status');
+
+  if (btnPasteBpmnXml && modalPasteBpmnXml) {
+    btnPasteBpmnXml.addEventListener('click', () => {
+      modalPasteBpmnXml.classList.add('open');
+      setTimeout(() => textareaPasteBpmnXml?.focus(), 0);
+    });
+  }
+
+  const closePasteBpmnXmlModal = () => {
+    if (modalPasteBpmnXml) modalPasteBpmnXml.classList.remove('open');
+    if (pasteBpmnXmlStatus) pasteBpmnXmlStatus.textContent = 'XML akan divalidasi dan dimuat ke kanvas BPMN.';
+  };
+
+  [btnClosePasteBpmnXml, btnCancelPasteBpmnXml].forEach((button) => {
+    if (button) button.addEventListener('click', closePasteBpmnXmlModal);
+  });
+
+  if (modalPasteBpmnXml) {
+    modalPasteBpmnXml.addEventListener('click', (event) => {
+      if (event.target === modalPasteBpmnXml) closePasteBpmnXmlModal();
+    });
+  }
+
+  if (btnImportPasteBpmnXml && textareaPasteBpmnXml && pasteBpmnXmlStatus) {
+    btnImportPasteBpmnXml.addEventListener('click', async () => {
+      const rawXml = textareaPasteBpmnXml.value.trim();
+      if (!rawXml) {
+        pasteBpmnXmlStatus.textContent = 'Tempel kode XML BPMN terlebih dahulu.';
+        textareaPasteBpmnXml.focus();
+        return;
+      }
+
+      const parsed = new DOMParser().parseFromString(rawXml, 'application/xml');
+      const definitions = parsed.documentElement;
+      const bpmnNamespace = 'http://www.omg.org/spec/BPMN/20100524/MODEL';
+      const isBpmnDefinitions = definitions
+        && definitions.localName === 'definitions'
+        && (definitions.namespaceURI === bpmnNamespace
+          || parsed.getElementsByTagNameNS(bpmnNamespace, 'process').length > 0);
+
+      if (parsed.querySelector('parsererror') || !isBpmnDefinitions) {
+        pasteBpmnXmlStatus.textContent = 'XML tidak valid atau bukan dokumen BPMN 2.0. Periksa kembali kode yang ditempel.';
+        return;
+      }
+
+      btnImportPasteBpmnXml.disabled = true;
+      pasteBpmnXmlStatus.textContent = 'Memuat diagram BPMN...';
+      const success = await openDiagram(rawXml, { showErrors: false });
+      btnImportPasteBpmnXml.disabled = false;
+
+      if (success) {
+        currentFileName = 'diagram-bpmn.bpmn';
+        textareaPasteBpmnXml.value = '';
+        closePasteBpmnXmlModal();
+        switchView('workspace');
+      } else {
+        pasteBpmnXmlStatus.textContent = 'Diagram gagal dimuat oleh BPMN Modeler. Periksa definisi dan tata letak BPMN DI di dalam XML.';
+      }
+    });
+
+    textareaPasteBpmnXml.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        btnImportPasteBpmnXml.click();
+      }
+    });
+
+    textareaPasteBpmnXml.addEventListener('paste', (event) => {
+      const pastedText = event.clipboardData?.getData('text') || '';
+      if (/<\s*(?:[\w.-]+:)?definitions\b/i.test(pastedText)) {
+        pasteBpmnXmlStatus.textContent = 'XML BPMN terdeteksi. Diagram akan dimuat otomatis...';
+        setTimeout(() => btnImportPasteBpmnXml.click(), 0);
+      }
+    });
+
+    // Also accept a full BPMN XML document pasted directly on the page, without opening the dialog.
+    document.addEventListener('paste', (event) => {
+      const target = event.target;
+      if (target && (target.isContentEditable || /^(INPUT|TEXTAREA)$/i.test(target.tagName))) return;
+      const pastedText = event.clipboardData?.getData('text') || '';
+      if (/<\s*(?:[\w.-]+:)?definitions\b/i.test(pastedText)) {
+        textareaPasteBpmnXml.value = pastedText;
+        modalPasteBpmnXml.classList.add('open');
+        pasteBpmnXmlStatus.textContent = 'XML BPMN terdeteksi. Diagram akan dimuat otomatis...';
+        setTimeout(() => btnImportPasteBpmnXml.click(), 0);
+      }
+    });
+  } else if (btnPasteBpmnXml) {
+    btnPasteBpmnXml.addEventListener('click', () => {
+      alert('Dialog tempel XML BPMN tidak tersedia. Muat ulang halaman dan coba lagi.');
     });
   }
 

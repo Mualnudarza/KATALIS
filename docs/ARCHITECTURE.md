@@ -148,7 +148,10 @@ Alur pemrosesan data ujung-ke-ujung (*end-to-end*):
 [3. Pemilihan Instrumen BPMN Modeler]
   - Shell mengalihkan tampilan ke Ruang Kerja BPMN
   - Modeler mengimpor XML dari LocalStorage (atau Template Bawaan jika kosong)
-  - Sidebar Tab Navigasi siap memfasilitasi kembali ke Hub atau memilih template
+  - XML BPMN dapat dimuat dari berkas, drag-and-drop, atau dialog tempel XML
+  - Dialog mem-parse XML di peramban dan memvalidasi root BPMN 2.0 sebelum memanggil `modeler.importXML`
+  - XML valid disimpan lokal; kegagalan impor menampilkan pesan tanpa mengganti diagram tersimpan
+  - Sidebar Tab Navigasi siap memfasilitasi kembali ke Hub atau memilih template proses.
        │
        ▼
 [4. Interaksi Pemodelan & Simulasi Token]
